@@ -10,9 +10,19 @@ import joblib
 import pandas as pd
 
 
+# Try to load ML models, if they don't exist, show setup message
+ml_model = None
+models_ready = False
 
-ml_model = MLModel()
-ml_model.load_all()
+try:
+    ml_model = MLModel()
+    ml_model.load_all()
+    models_ready = True
+except Exception as e:
+    print(f"⚠️  Warning: Could not load ML models: {e}")
+    print("Models will be trained on first deployment.")
+    ml_model = None
+    models_ready = False
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(
@@ -181,6 +191,14 @@ def pathway(path_type):
 def submit_pathway():
     if 'user_id' not in session:
         return jsonify({'success': False, 'message': 'Not authenticated'})
+    
+    # Check if models are ready
+    if not models_ready or ml_model is None:
+        return jsonify({
+            'success': False, 
+            'message': 'ML models are still being trained. Please try again in a few moments.',
+            'redirect': '/dashboard'
+        })
 
     data = request.json
     pathway = data.get('pathway')
