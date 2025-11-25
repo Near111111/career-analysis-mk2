@@ -1,0 +1,91 @@
+<!-- templates/pathway_tesda.html -->
+{% extends "base.html" %} {% block title %}TESDA Training{% endblock %} {% block
+content %}
+<div class="pathway-container">
+  <h1>🔧 TESDA Skills Training</h1>
+  <p class="subtitle">Find the right technical-vocational course</p>
+
+  <form id="tesdaForm">
+    <div class="form-group">
+      <label for="course_interest">Course Interest Area</label>
+      <select id="course_interest" required>
+        <option value="">Select...</option>
+        <option value="ict">Information & Communication Technology</option>
+        <option value="automotive">Automotive</option>
+        <option value="construction">Construction</option>
+        <option value="electrical">Electrical</option>
+        <option value="electronics">Electronics</option>
+        <option value="food">Food & Beverage</option>
+        <option value="healthcare">Healthcare Services</option>
+        <option value="beauty">Beauty & Wellness</option>
+        <option value="agriculture">Agriculture</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="budget">Training Budget</label>
+      <select id="budget" required>
+        <option value="">Select...</option>
+        <option value="free">Free programs only</option>
+        <option value="low">Up to ₱5,000</option>
+        <option value="medium">₱5,000 - ₱15,000</option>
+        <option value="high">₱15,000+</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="time_available">Available Time</label>
+      <select id="time_available" required>
+        <option value="">Select...</option>
+        <option value="full_time">Full-time (weekdays)</option>
+        <option value="weekends">Weekends only</option>
+        <option value="evenings">Evenings</option>
+        <option value="flexible">Flexible schedule</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="location">Preferred Training Location</label>
+      <input
+        type="text"
+        id="location"
+        placeholder="City/Municipality"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="experience">Previous Experience in this Field</label>
+      <select id="experience" required>
+        <option value="">Select...</option>
+        <option value="none">No experience</option>
+        <option value="basic">Basic knowledge</option>
+        <option value="intermediate">Some experience</option>
+        <option value="advanced">Experienced</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-primary">Get TESDA Recommendations</button>
+    <a href="/dashboard" class="btn-secondary">Back to Dashboard</a>
+  </form>
+
+  <div id="results" class="results-container" style="display: none"></div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='pathway.js') }}"></script>
+<script>
+  document.getElementById("tesdaForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const responses = {
+      course_interest: document.getElementById("course_interest").value,
+      budget: document.getElementById("budget").value,
+      time_available: document.getElementById("time_available").value,
+      location: document.getElementById("location").value,
+      experience: document.getElementById("experience").value,
+    };
+
+    await submitPathway("tesda", responses);
+  });
+</script>
+{% endblock %}

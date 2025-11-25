@@ -1,0 +1,130 @@
+<!-- templates/profile.html -->
+{% extends "base.html" %} {% block title %}Create Profile{% endblock %} {% block
+content %}
+<div class="profile-container">
+  <h1>Tell Us About Yourself</h1>
+  <p class="subtitle">This helps us provide personalized recommendations</p>
+
+  <form id="profileForm">
+    <div class="form-group">
+      <label for="age">Age</label>
+      <input type="number" id="age" name="age" min="15" max="100" required />
+    </div>
+
+    <div class="form-group">
+      <label for="education_level">Highest Education Level</label>
+      <select id="education_level" name="education_level" required>
+        <option value="">Select...</option>
+        <option value="elementary">Elementary</option>
+        <option value="junior_high">Junior High School</option>
+        <option value="senior_high">Senior High School</option>
+        <option value="college">Some College</option>
+        <option value="college_graduate">College Graduate</option>
+        <option value="vocational">Vocational/TESDA</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="current_status">Current Status</label>
+      <select id="current_status" name="current_status" required>
+        <option value="">Select...</option>
+        <option value="student">Student</option>
+        <option value="out_of_school">Out of School</option>
+        <option value="employed">Employed</option>
+        <option value="unemployed">Unemployed</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="skills">Skills (comma-separated)</label>
+      <input
+        type="text"
+        id="skills"
+        name="skills"
+        placeholder="e.g., computer, cooking, driving"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="interests">Interests (comma-separated)</label>
+      <input
+        type="text"
+        id="interests"
+        name="interests"
+        placeholder="e.g., technology, art, business"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Barriers (select all that apply)</label>
+      <div class="checkbox-group">
+        <label
+          ><input type="checkbox" name="barriers" value="money" /> Financial
+          constraints</label
+        >
+        <label
+          ><input type="checkbox" name="barriers" value="distance" />
+          Distance/Transportation</label
+        >
+        <label
+          ><input type="checkbox" name="barriers" value="device" /> No
+          device/internet</label
+        >
+        <label
+          ><input type="checkbox" name="barriers" value="schedule" />
+          Time/Schedule conflicts</label
+        >
+        <label
+          ><input type="checkbox" name="barriers" value="family" /> Family
+          responsibilities</label
+        >
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary">Save Profile</button>
+    <div id="message" class="message"></div>
+  </form>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  document
+    .getElementById("profileForm")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        age: document.getElementById("age").value,
+        education_level: document.getElementById("education_level").value,
+        current_status: document.getElementById("current_status").value,
+        skills: document.getElementById("skills").value,
+        interests: document.getElementById("interests").value,
+        barriers: Array.from(
+          document.querySelectorAll('input[name="barriers"]:checked')
+        )
+          .map((cb) => cb.value)
+          .join(","),
+      };
+
+      try {
+        const response = await fetch("/profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          window.location.href = "/dashboard";
+        } else {
+          document.getElementById("message").textContent =
+            "Error saving profile";
+          document.getElementById("message").className = "message error";
+        }
+      } catch (error) {
+        document.getElementById("message").textContent = "An error occurred";
+        document.getElementById("message").className = "message error";
+      }
+    });
+</script>
+{% endblock %}

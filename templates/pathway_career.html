@@ -1,0 +1,81 @@
+<!-- templates/pathway_career.html -->
+{% extends "base.html" %} {% block title %}Career Options{% endblock %} {% block
+content %}
+<div class="pathway-container">
+  <h1>🎯 Explore Career Options</h1>
+  <p class="subtitle">Answer these questions to find careers that match you</p>
+
+  <form id="careerForm">
+    <div class="form-group">
+      <label for="primary_skills">What are your strongest skills?</label>
+      <input
+        type="text"
+        id="primary_skills"
+        placeholder="e.g., communication, problem-solving, technical"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="industry">Preferred Industry</label>
+      <select id="industry" required>
+        <option value="">Select...</option>
+        <option value="tech">Technology/IT</option>
+        <option value="business">Business/Sales</option>
+        <option value="health">Healthcare</option>
+        <option value="education">Education</option>
+        <option value="creative">Creative/Arts</option>
+        <option value="service">Service Industry</option>
+        <option value="trade">Skilled Trades</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="salary">Expected Monthly Salary Range</label>
+      <select id="salary" required>
+        <option value="">Select...</option>
+        <option value="15k-25k">₱15,000 - ₱25,000</option>
+        <option value="25k-40k">₱25,000 - ₱40,000</option>
+        <option value="40k-60k">₱40,000 - ₱60,000</option>
+        <option value="60k+">₱60,000+</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="work_environment">Preferred Work Environment</label>
+      <select id="work_environment" required>
+        <option value="">Select...</option>
+        <option value="office">Office-based</option>
+        <option value="remote">Remote/Work from home</option>
+        <option value="field">Field work</option>
+        <option value="hybrid">Hybrid</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-primary">
+      Get Career Recommendations
+    </button>
+    <a href="/dashboard" class="btn-secondary">Back to Dashboard</a>
+  </form>
+
+  <div id="results" class="results-container" style="display: none"></div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='pathway.js') }}"></script>
+<script>
+  document
+    .getElementById("careerForm")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const responses = {
+        primary_skills: document.getElementById("primary_skills").value,
+        industry: document.getElementById("industry").value,
+        salary: document.getElementById("salary").value,
+        work_environment: document.getElementById("work_environment").value,
+      };
+
+      await submitPathway("career", responses);
+    });
+</script>
+{% endblock %}

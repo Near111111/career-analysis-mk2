@@ -1,0 +1,132 @@
+<!-- templates/my_recommendations.html -->
+{% extends "base.html" %} {% block title %}My Saved Recommendations{% endblock
+%} {% block content %}
+
+<div class="recommendations-container">
+  <div class="recommendations-header">
+    <div>
+      <h1>📋 My Saved Recommendations</h1>
+      <p class="header-subtitle">Track your career and education pathways</p>
+    </div>
+    <a href="/dashboard" class="btn-secondary">← Back to Dashboard</a>
+  </div>
+
+  {% if recommendations %}
+  <div class="saved-recommendations">
+    {% for rec in recommendations %}
+    <div class="recommendation-card" data-index="{{ loop.index }}">
+      <div class="card-header">
+        <div class="pathway-badge pathway-{{ rec[2]|lower }}">{{ rec[2] }}</div>
+        <div class="card-meta">
+          <h3 id="title-{{ loop.index }}">Loading...</h3>
+          <p class="saved-date">💾 Saved {{ rec[5] }}</p>
+        </div>
+      </div>
+
+      <div class="card-content">
+        <div class="recommendation-details">
+          <div class="detail-item">
+            <span class="detail-label">Match Score</span>
+            <div class="match-bar">
+              <div
+                class="match-fill"
+                id="fill-{{ loop.index }}"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+          <div class="metadata-display" id="metadata-{{ loop.index }}"></div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button
+          class="btn-small btn-view"
+          onclick="alert('Saved & Bookmarked')"
+        >
+          ⭐ Saved
+        </button>
+        <button
+          class="btn-small btn-remove"
+          onclick="if(confirm('Remove this recommendation?')) { window.location.href='/remove_recommendation?id={{ rec[0] }}'; }"
+        >
+          🗑️ Remove
+        </button>
+      </div>
+
+      <script>
+        (function () {
+          // Parse recommendation data
+          const recStr = `{{ rec[3] }}`.trim();
+          let rec = {};
+
+          try {
+            // Handle escaped HTML entities first
+            const decoded = recStr
+              .replace(/&quot;/g, '"')
+              .replace(/&#39;/g, "'")
+              .replace(/&amp;/g, "&");
+
+            // Convert Python dict to JSON
+            const jsonStr = decoded
+              .replace(/'/g, '"')
+              .replace(/True/g, "true")
+              .replace(/False/g, "false")
+              .replace(/None/g, "null");
+
+            rec = JSON.parse(jsonStr);
+          } catch (e) {
+            console.error("Parse error:", e, "Input:", recStr);
+            rec = { title: "Error parsing", match: 0, metadata: {} };
+          }
+
+          // Set title
+          const titleEl = document.getElementById("title-{{ loop.index }}");
+          if (rec.title) {
+            titleEl.textContent = rec.title;
+          }
+
+          // Set match score bar
+          const match = rec.match || 0;
+          const fillEl = document.getElementById("fill-{{ loop.index }}");
+          fillEl.style.width = Math.min(match, 100) + "%";
+
+          // Set metadata
+          const metadata = rec.metadata || {};
+          const metadataEl = document.getElementById(
+            "metadata-{{ loop.index }}"
+          );
+
+          if (Object.keys(metadata).length > 0) {
+            let html = '<div class="metadata-grid">';
+            for (const [key, value] of Object.entries(metadata)) {
+              if (value) {
+                const label = key
+                  .replace(/_/g, " ")
+                  .split(" ")
+                  .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                  .join(" ");
+                html += `<div class="metadata-item"><strong>${label}</strong><span>${value}</span></div>`;
+              }
+            }
+            html += "</div>";
+            metadataEl.innerHTML = html;
+          }
+        })();
+      </script>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">✨</div>
+    <h2>No Recommendations Yet</h2>
+    <p>
+      Start exploring career, education, and TESDA pathways to save your
+      recommendations.
+    </p>
+    <a href="/dashboard" class="btn-primary btn-large">Explore Pathways Now</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

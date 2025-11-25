@@ -1,0 +1,35 @@
+<!-- templates/dashboard.html -->
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
+content %}
+<div class="dashboard-container">
+  <h1>Choose Your Pathway</h1>
+  <p class="subtitle">Select an option to get personalized recommendations</p>
+
+  <div class="pathway-grid">
+    <a href="/pathway/career" class="pathway-card">
+      <div class="pathway-icon">💼</div>
+      <h2>Explore Career Options</h2>
+      <p>Discover career paths that match your skills and interests</p>
+    </a>
+
+    <a href="/pathway/education" class="pathway-card">
+      <div class="pathway-icon">📚</div>
+      <h2>Go Back to School</h2>
+      <p>Find the right educational program (ALS, SHS, College)</p>
+    </a>
+
+    <a href="/pathway/tesda" class="pathway-card">
+      <div class="pathway-icon">🔧</div>
+      <h2>TESDA / Skills Training</h2>
+      <p>Get technical-vocational training and certification</p>
+    </a>
+  </div>
+
+  <div class="quick-links">
+    <a href="/my_recommendations" class="btn-secondary"
+      >View Saved Recommendations</a
+    >
+    <a href="/profile" class="btn-secondary">Update Profile</a>
+  </div>
+</div>
+{% endblock %}

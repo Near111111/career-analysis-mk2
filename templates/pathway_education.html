@@ -1,0 +1,102 @@
+<!-- templates/pathway_education.html -->
+{% extends "base.html" %} {% block title %}Education Program{% endblock %} {%
+block content %}
+<div class="pathway-container">
+  <h1>📚 Go Back to School</h1>
+  <p class="subtitle">Find the right educational program for you</p>
+
+  <form id="educationForm">
+    <div class="form-group">
+      <label for="program_type">Which program interests you?</label>
+      <select id="program_type" required>
+        <option value="">Select...</option>
+        <option value="als">Alternative Learning System (ALS)</option>
+        <option value="shs">Senior High School (SHS)</option>
+        <option value="college">College/University</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="modality">Preferred Learning Modality</label>
+      <select id="modality" required>
+        <option value="">Select...</option>
+        <option value="online">Online</option>
+        <option value="modular">Modular/Self-paced</option>
+        <option value="face_to_face">Face-to-face</option>
+        <option value="blended">Blended</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="budget">Available Budget for Education</label>
+      <select id="budget" required>
+        <option value="">Select...</option>
+        <option value="free">Free programs only</option>
+        <option value="low">₱1,000 - ₱5,000/month</option>
+        <option value="medium">₱5,000 - ₱15,000/month</option>
+        <option value="high">₱15,000+/month</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="learning_style">Learning Style</label>
+      <select id="learning_style" required>
+        <option value="">Select...</option>
+        <option value="visual">Visual (videos, diagrams)</option>
+        <option value="reading">Reading/Writing</option>
+        <option value="hands_on">Hands-on/Practical</option>
+        <option value="audio">Audio/Listening</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="career_goal">Ultimate Career Goal</label>
+      <input
+        type="text"
+        id="career_goal"
+        placeholder="e.g., become a nurse, work in IT"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="motivation">What motivates you to continue education?</label>
+      <select id="motivation" required>
+        <option value="">Select...</option>
+        <option value="career_advancement">Career advancement</option>
+        <option value="personal_growth">Personal growth</option>
+        <option value="better_salary">Better salary</option>
+        <option value="family_support">Support my family</option>
+        <option value="passion">Follow my passion</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-primary">
+      Get Education Recommendations
+    </button>
+    <a href="/dashboard" class="btn-secondary">Back to Dashboard</a>
+  </form>
+
+  <div id="results" class="results-container" style="display: none"></div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='pathway.js') }}"></script>
+<script>
+  document
+    .getElementById("educationForm")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const responses = {
+        program_type: document.getElementById("program_type").value,
+        modality: document.getElementById("modality").value,
+        budget: document.getElementById("budget").value,
+        learning_style: document.getElementById("learning_style").value,
+        career_goal: document.getElementById("career_goal").value,
+        motivation: document.getElementById("motivation").value,
+      };
+
+      await submitPathway("education", responses);
+    });
+</script>
+{% endblock %}
