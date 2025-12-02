@@ -29,16 +29,34 @@ https://github.com/Near111111/career-analysis-mk2
 
 Fill in these settings:
 
-| Field             | Value                                                |
-| ----------------- | ---------------------------------------------------- |
-| **Name**          | `education-career-system`                            |
-| **Environment**   | `Python 3`                                           |
-| **Region**        | Choose closest to you                                |
-| **Branch**        | `main`                                               |
-| **Build Command** | `pip install -r requirements.txt && python setup.py` |
-| **Start Command** | `gunicorn app:app`                                   |
+| Field             | Value                             |
+| ----------------- | --------------------------------- |
+| **Name**          | `education-career-system`         |
+| **Environment**   | `Python 3`                        |
+| **Region**        | Choose closest to you             |
+| **Branch**        | `main`                            |
+| **Build Command** | `pip install -r requirements.txt` |
+| **Start Command** | `gunicorn app:app`                |
 
-**Important**: Use the Build Command above - it trains the ML models!
+**Note**: Do NOT include `setup.py` in build command (it will cause syntax errors on Render)
+
+### Step 3b: Add Build Script (IMPORTANT!)
+
+1. Before deploying, add a **Pre-Deploy Command**:
+   ```
+   python setup.py
+   ```
+2. Or use this simpler method: Just deploy, then go to **Settings** → **Environment** and add:
+   ```
+   BUILD_COMMAND=pip install -r requirements.txt
+   PRE_DEPLOY_COMMAND=python setup.py
+   ```
+
+**Simplified Method** (Recommended):
+
+- **Build Command**: Leave blank or use: `pip install -r requirements.txt`
+- **Start Command**: `gunicorn app:app`
+- Models will train on first start (first 2-3 minutes)
 
 ### Step 4: Add Environment Variables
 

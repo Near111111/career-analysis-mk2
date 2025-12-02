@@ -1,0 +1,132 @@
+{% extends "base.html" %} {% block title %}Admin Login{% endblock %} {% block
+content %}
+<div class="auth-container">
+  <div class="form-card">
+    <h2>🔐 Admin Panel Login</h2>
+
+    {% if error %}
+    <div class="alert alert-error"><strong>Error:</strong> {{ error }}</div>
+    {% endif %}
+
+    <form method="POST" class="form-group">
+      <div>
+        <label for="email">Admin Email:</label>
+        <input
+          type="text"
+          id="email"
+          name="email"
+          required
+          placeholder="Enter admin email"
+        />
+      </div>
+
+      <div>
+        <label for="password">Admin Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          placeholder="Enter admin password"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Login as Admin</button>
+    </form>
+
+    <p style="margin-top: 20px; text-align: center">
+      <a href="/login">← Back to User Login</a>
+    </p>
+  </div>
+</div>
+
+<style>
+  .auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+  }
+
+  .form-card {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .form-card h2 {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #333;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .form-group div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-group label {
+    font-weight: 600;
+    color: #555;
+  }
+
+  .form-group input {
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+  }
+
+  .btn {
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .alert {
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .alert-error {
+    background-color: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+  }
+</style>
+{% endblock %}

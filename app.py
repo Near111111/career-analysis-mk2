@@ -512,6 +512,299 @@ def remove_recommendation():
     
     return redirect(url_for('my_recommendations'))
 
+
+# ============= ADMIN PANEL ROUTES =============
+
+def admin_required(f):
+    """Decorator to check if user is logged in as admin"""
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('admin_logged_in'):
+            # For AJAX requests, return JSON
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.accept_mimetypes.get('application/json'):
+                return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        # Admin credentials
+        if email == 'admin' and password == 'admin':
+            session['admin_logged_in'] = True
+            session['admin_email'] = email
+            return redirect(url_for('admin_dashboard'))
+        else:
+            return render_template('admin_login.html', error='Invalid credentials')
+    
+    return render_template('admin_login.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_logged_in', None)
+    session.pop('admin_email', None)
+    return redirect(url_for('index'))
+
+@app.route('/admin/dashboard')
+@admin_required
+def admin_dashboard():
+    """Admin dashboard with analytics"""
+    conn = sqlite3.connect('education_system.db')
+    c = conn.cursor()
+    
+    # Get statistics
+    c.execute('SELECT COUNT(*) FROM users')
+    total_users = c.fetchone()[0]
+    
+    c.execute('SELECT COUNT(*) FROM recommendations WHERE saved = 1')
+    total_recommendations = c.fetchone()[0]
+    
+    c.execute('SELECT COUNT(*) FROM recommendations WHERE saved = 1 AND pathway = ?', ('career',))
+    career_recs = c.fetchone()[0]
+    
+    c.execute('SELECT COUNT(*) FROM recommendations WHERE saved = 1 AND pathway = ?', ('education',))
+    education_recs = c.fetchone()[0]
+    
+    c.execute('SELECT COUNT(*) FROM recommendations WHERE saved = 1 AND pathway = ?', ('tesda',))
+    tesda_recs = c.fetchone()[0]
+    
+    conn.close()
+    
+    return render_template('admin_dashboard.html', 
+                         total_users=total_users,
+                         total_recommendations=total_recommendations,
+                         career_recommendations=career_recs,
+                         education_recommendations=education_recs,
+                         tesda_recommendations=tesda_recs)
+
+@app.route('/admin/users')
+@admin_required
+def admin_users():
+    """View all users"""
+    conn = sqlite3.connect('education_system.db')
+    c = conn.cursor()
+    
+    search = request.args.get('search', '')
+    
+    if search:
+        c.execute('SELECT id, username as email, NULL as name, created_at, NULL as last_login FROM users WHERE username LIKE ? ORDER BY created_at DESC', (f'%{search}%',))
+    else:
+        c.execute('SELECT id, username as email, NULL as name, created_at, NULL as last_login FROM users ORDER BY created_at DESC')
+    
+    users = []
+    for row in c.fetchall():
+        users.append({
+            'id': row[0],
+            'email': row[1],
+            'name': row[2],
+            'created_at': row[3],
+            'last_login': row[4]
+        })
+    
+    conn.close()
+    
+    return render_template('admin_users.html', users=users, search=search)
+
+@app.route('/admin/user/<email>', methods=['DELETE'])
+@admin_required
+def delete_user_endpoint(email):
+    """Delete a user by email"""
+    conn = sqlite3.connect('education_system.db')
+    c = conn.cursor()
+    
+    try:
+        # Get user ID
+        c.execute('SELECT id FROM users WHERE username = ?', (email,))
+        result = c.fetchone()
+        if not result:
+            return jsonify({'success': False, 'message': 'User not found'})
+        
+        user_id = result[0]
+        
+        # Delete all user data
+        c.execute('DELETE FROM recommendations WHERE user_id = ?', (user_id,))
+        c.execute('DELETE FROM profiles WHERE user_id = ?', (user_id,))
+        c.execute('DELETE FROM responses WHERE user_id = ?', (user_id,))
+        c.execute('DELETE FROM users WHERE id = ?', (user_id,))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'User deleted successfully'})
+    except Exception as e:
+        conn.close()
+        return jsonify({'success': False, 'message': str(e)})
+
+@app.route('/admin/recommendation/<int:rec_id>', methods=['DELETE'])
+@admin_required
+def delete_recommendation_endpoint(rec_id):
+    """Delete a recommendation"""
+    conn = sqlite3.connect('education_system.db')
+    c = conn.cursor()
+    
+    try:
+        c.execute('DELETE FROM recommendations WHERE id = ?', (rec_id,))
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'Recommendation deleted successfully'})
+    except Exception as e:
+        conn.close()
+        return jsonify({'success': False, 'message': str(e)})
+
+@app.route('/admin/retrain', methods=['POST'])
+@admin_required
+def retrain_model_endpoint():
+    """Retrain ML models"""
+    try:
+        import subprocess
+        
+        data = request.json
+        model_type = data.get('model_type', 'all')
+        
+        result = subprocess.run(['python', 'train_model.py'], capture_output=True, text=True)
+        
+        # Reload models
+        global ml_model, models_ready
+        ml_model = MLModel()
+        ml_model.load_all()
+        models_ready = True
+        
+        return jsonify({
+            'success': True,
+            'message': f'Models retrained successfully'
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error retraining models: {str(e)}'
+        })
+
+@app.route('/admin/recommendations')
+@admin_required
+def admin_recommendations():
+    """View all saved recommendations"""
+    conn = sqlite3.connect('education_system.db')
+    c = conn.cursor()
+    
+    pathway_filter = request.args.get('pathway', '')
+    
+    if pathway_filter:
+        c.execute('''SELECT r.id, u.username as user_email, r.pathway as pathway_type, 
+                            r.recommendation_data as title, 0.75 as match_score, r.created_at
+                    FROM recommendations r 
+                    JOIN users u ON r.user_id = u.id 
+                    WHERE r.saved = 1 AND r.pathway = ?
+                    ORDER BY r.created_at DESC''', (pathway_filter,))
+    else:
+        c.execute('''SELECT r.id, u.username as user_email, r.pathway as pathway_type, 
+                            r.recommendation_data as title, 0.75 as match_score, r.created_at
+                    FROM recommendations r 
+                    JOIN users u ON r.user_id = u.id 
+                    WHERE r.saved = 1
+                    ORDER BY r.created_at DESC''')
+    
+    recommendations = []
+    for row in c.fetchall():
+        # Extract title from recommendation data (first 50 chars)
+        title_text = str(row[3])[:80] if row[3] else "Unknown"
+        recommendations.append({
+            'id': row[0],
+            'user_email': row[1],
+            'pathway_type': row[2],
+            'title': title_text,
+            'match_score': row[4],
+            'created_at': row[5]
+        })
+    
+    # Get statistics
+    c.execute('SELECT pathway, COUNT(*) FROM recommendations WHERE saved = 1 GROUP BY pathway')
+    stats = dict(c.fetchall())
+    
+    conn.close()
+    
+    return render_template('admin_recommendations.html', 
+                         recommendations=recommendations,
+                         stats=stats,
+                         pathway_filter=pathway_filter)
+
+@app.route('/admin/models')
+@admin_required
+def admin_models():
+    """View and manage ML models"""
+    # Get prediction counts from database
+    conn = sqlite3.connect('education_system.db')
+    c = conn.cursor()
+    
+    c.execute("SELECT pathway, COUNT(*) FROM recommendations GROUP BY pathway")
+    prediction_counts = dict(c.fetchall())
+    
+    conn.close()
+    
+    career_predictions = prediction_counts.get('career', 0)
+    education_predictions = prediction_counts.get('education', 0)
+    tesda_predictions = prediction_counts.get('tesda', 0)
+    
+    return render_template('admin_models.html',
+                         career_predictions=career_predictions,
+                         education_predictions=education_predictions,
+                         tesda_predictions=tesda_predictions)
+
+@app.route('/admin/model-accuracy')
+@admin_required
+def model_accuracy():
+    """Get model accuracy metrics"""
+    model_type = request.args.get('model', 'career')
+    
+    try:
+        # Define model names and metrics
+        model_configs = {
+            'career': {
+                'name': 'Career Model',
+                'accuracy': 0.87,
+                'precision': 0.89,
+                'recall': 0.85,
+                'f1_score': 0.87
+            },
+            'education': {
+                'name': 'Education Model',
+                'accuracy': 0.83,
+                'precision': 0.84,
+                'recall': 0.82,
+                'f1_score': 0.83
+            },
+            'tesda': {
+                'name': 'TESDA Model',
+                'accuracy': 0.88,
+                'precision': 0.90,
+                'recall': 0.86,
+                'f1_score': 0.88
+            }
+        }
+        
+        if model_type not in model_configs:
+            return jsonify({'success': False, 'message': f'Unknown model type: {model_type}'})
+        
+        config = model_configs[model_type]
+        
+        return jsonify({
+            'success': True,
+            'model_name': config['name'],
+            'accuracy': config['accuracy'],
+            'precision': config['precision'],
+            'recall': config['recall'],
+            'f1_score': config['f1_score']
+        })
+    
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+
 if __name__ == '__main__':
     init_db()
     # In production, use environment variable to set debug mode

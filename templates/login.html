@@ -24,36 +24,44 @@
     <p class="switch-auth">
       Don't have an account? <a href="/register">Register here</a>
     </p>
+
+    <hr style="margin: 20px 0" />
+
+    <p class="admin-login-link">
+      <a href="/admin/login" class="btn-admin">🔐 Admin Login</a>
+    </p>
   </div>
-</div>
-{% endblock %} {% block scripts %}
-<script>
-  document.getElementById("loginForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+  {% endblock %} {% block scripts %}
+  <script>
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const messageDiv = document.getElementById("message");
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const messageDiv = document.getElementById("message");
 
-    try {
-      const response = await fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        try {
+          const response = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            window.location.href = "/dashboard";
+          } else {
+            messageDiv.textContent = data.message;
+            messageDiv.className = "message error";
+          }
+        } catch (error) {
+          messageDiv.textContent = "An error occurred";
+          messageDiv.className = "message error";
+        }
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        window.location.href = "/dashboard";
-      } else {
-        messageDiv.textContent = data.message;
-        messageDiv.className = "message error";
-      }
-    } catch (error) {
-      messageDiv.textContent = "An error occurred";
-      messageDiv.className = "message error";
-    }
-  });
-</script>
-{% endblock %}
+  </script>
+  {% endblock %}
+</div>

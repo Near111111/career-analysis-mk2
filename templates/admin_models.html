@@ -1,0 +1,544 @@
+{% extends "base.html" %} {% block title %}ML Model Management{% endblock %} {%
+block content %}
+<div class="admin-wrapper">
+  <div class="admin-sidebar">
+    <div class="sidebar-header">
+      <h3>🛡️ Admin</h3>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard" class="nav-item"
+        ><span class="icon">📊</span> Dashboard</a
+      >
+      <a href="/admin/users" class="nav-item"
+        ><span class="icon">👥</span> Users</a
+      >
+      <a href="/admin/recommendations" class="nav-item"
+        ><span class="icon">💾</span> Recommendations</a
+      >
+      <a href="/admin/models" class="nav-item active"
+        ><span class="icon">🤖</span> Models</a
+      >
+      <a href="/logout" class="nav-item logout"
+        ><span class="icon">🚪</span> Logout</a
+      >
+    </nav>
+  </div>
+
+  <div class="admin-content">
+    <div class="content-header">
+      <div>
+        <h1>🤖 ML Model Management</h1>
+        <p class="subtitle">Monitor and manage machine learning models</p>
+      </div>
+    </div>
+
+    <div class="models-grid">
+      <div class="model-card career-model">
+        <div class="model-header">
+          <h3>🎯 Career Model</h3>
+          <span class="status-badge active">Active</span>
+        </div>
+        <div class="model-body">
+          <div class="model-info">
+            <p><strong>Algorithm:</strong> Random Forest Classifier</p>
+            <p><strong>Training Data:</strong> 171 career entries</p>
+            <p><strong>Features:</strong> Skills, Education, Experience</p>
+            <p><strong>Predictions:</strong> {{ career_predictions }}</p>
+          </div>
+          <div class="model-actions">
+            <button class="btn btn-primary" onclick="viewAccuracy('career')">
+              📊 View Accuracy
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-card education-model">
+        <div class="model-header">
+          <h3>🎓 Education Model</h3>
+          <span class="status-badge active">Active</span>
+        </div>
+        <div class="model-body">
+          <div class="model-info">
+            <p><strong>Algorithm:</strong> Random Forest Classifier</p>
+            <p><strong>Training Data:</strong> 46 education programs</p>
+            <p><strong>Features:</strong> Interests, Goals, Background</p>
+            <p><strong>Predictions:</strong> {{ education_predictions }}</p>
+          </div>
+          <div class="model-actions">
+            <button class="btn btn-primary" onclick="viewAccuracy('education')">
+              📊 View Accuracy
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-card tesda-model">
+        <div class="model-header">
+          <h3>🔧 TESDA Model</h3>
+          <span class="status-badge active">Active</span>
+        </div>
+        <div class="model-body">
+          <div class="model-info">
+            <p><strong>Algorithm:</strong> Random Forest Classifier</p>
+            <p><strong>Training Data:</strong> 96 technical courses</p>
+            <p><strong>Features:</strong> Technical Skills, Specialization</p>
+            <p><strong>Predictions:</strong> {{ tesda_predictions }}</p>
+          </div>
+          <div class="model-actions">
+            <button class="btn btn-primary" onclick="viewAccuracy('tesda')">
+              📊 View Accuracy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accuracy Modal -->
+    <div id="accuracyModal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close" onclick="closeAccuracyModal()">&times;</span>
+        <h2 id="accuracyTitle">Model Accuracy</h2>
+        <div id="accuracyChart" style="height: 400px; margin: 20px 0"></div>
+        <div id="accuracyStats" style="text-align: center; margin-top: 20px">
+          <p>
+            <strong>Accuracy Score:</strong> <span id="accuracyScore"></span>%
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background: #f5f7fa;
+  }
+
+  .admin-sidebar {
+    width: 260px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .sidebar-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  .sidebar-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  .nav-item.active {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+  }
+  .nav-item.logout {
+    margin-top: auto;
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    margin-top: 20px;
+    padding-top: 15px;
+    color: #ffb3ba;
+  }
+  .nav-item.logout:hover {
+    background: rgba(255, 59, 48, 0.2);
+  }
+
+  .icon {
+    font-size: 18px;
+  }
+
+  .admin-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px;
+  }
+
+  .content-header {
+    margin-bottom: 40px;
+  }
+  .content-header h1 {
+    font-size: 28px;
+    color: #1a202c;
+    margin-bottom: 5px;
+  }
+  .subtitle {
+    color: #718096;
+    font-size: 14px;
+  }
+
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+  }
+
+  .model-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .model-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .model-header {
+    padding: 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .model-header h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .career-model .model-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  .education-model .model-header {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+  .tesda-model .model-header {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+
+  .status-badge {
+    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .status-badge.active {
+    background: rgba(46, 125, 50, 0.3);
+  }
+
+  .model-body {
+    padding: 20px;
+  }
+
+  .model-info {
+    margin-bottom: 20px;
+  }
+  .model-info p {
+    margin: 8px 0;
+    font-size: 13px;
+    color: #4a5568;
+  }
+  .model-info strong {
+    color: #2d3748;
+  }
+
+  .model-actions {
+    display: flex;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .btn-primary {
+    background: #2196f3;
+    color: white;
+  }
+  .btn-primary:hover {
+    background: #1976d2;
+  }
+
+  .btn-success {
+    background: #4caf50;
+    color: white;
+  }
+  .btn-success:hover {
+    background: #388e3c;
+  }
+
+  .btn-lg {
+    padding: 15px 30px;
+    font-size: 16px;
+    width: fit-content;
+  }
+
+  .retrain-section {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    text-align: center;
+  }
+
+  .retrain-section h2 {
+    color: #2d3748;
+    margin-bottom: 10px;
+  }
+  .retrain-section p {
+    color: #718096;
+    margin-bottom: 20px;
+  }
+
+  .retrain-status {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f7fafc;
+    border-radius: 6px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    width: 0%;
+    transition: width 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    .admin-wrapper {
+      flex-direction: column;
+    }
+    .admin-sidebar {
+      width: 100%;
+      height: auto;
+      display: flex;
+      gap: 20px;
+      padding: 15px;
+      position: static;
+    }
+    .sidebar-header {
+      display: none;
+    }
+    .sidebar-nav {
+      flex-direction: row;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .nav-item {
+      flex: 1;
+      min-width: 100px;
+      justify-content: center;
+      font-size: 12px;
+      padding: 10px;
+    }
+    .admin-content {
+      padding: 15px;
+    }
+    .models-grid {
+      grid-template-columns: 1fr;
+    }
+    .model-actions {
+      flex-direction: column;
+    }
+  }
+
+  /* Modal Styles */
+  .modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+
+  .close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #999;
+  }
+
+  .close:hover {
+    color: #333;
+  }
+
+  #accuracyTitle {
+    color: #2d3748;
+    margin-bottom: 20px;
+  }
+
+  #accuracyStats {
+    background: #f7fafc;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 18px;
+  }
+</style>
+
+<script>
+  function viewAccuracy(modelType) {
+    fetch("/admin/model-accuracy?model=" + modelType, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          document.getElementById("accuracyTitle").textContent =
+            data.model_name + " - Accuracy Report";
+          document.getElementById("accuracyScore").textContent = (
+            data.accuracy * 100
+          ).toFixed(2);
+
+          // Draw accuracy bar chart
+          drawAccuracyChart(data);
+
+          document.getElementById("accuracyModal").style.display = "flex";
+        } else {
+          alert("Error: " + data.message);
+        }
+      })
+      .catch((err) => alert("Error fetching accuracy data: " + err));
+  }
+
+  function drawAccuracyChart(data) {
+    const chartDiv = document.getElementById("accuracyChart");
+    chartDiv.innerHTML = "";
+
+    const metrics = [
+      { label: "Precision", value: data.precision * 100 },
+      { label: "Recall", value: data.recall * 100 },
+      { label: "F1-Score", value: data.f1_score * 100 },
+      { label: "Accuracy", value: data.accuracy * 100 },
+    ];
+
+    const maxValue = 100;
+    const barHeight = 50;
+    const margin = 30;
+
+    metrics.forEach((metric, index) => {
+      const yPos = index * (barHeight + margin) + 20;
+      const barWidth = (metric.value / maxValue) * 600;
+
+      const container = document.createElement("div");
+      container.style.marginBottom = "20px";
+
+      const label = document.createElement("p");
+      label.textContent = metric.label + ": " + metric.value.toFixed(2) + "%";
+      label.style.margin = "0 0 5px 0";
+      label.style.fontWeight = "600";
+
+      const bar = document.createElement("div");
+      bar.style.width = "100%";
+      bar.style.height = "30px";
+      bar.style.backgroundColor = "#e2e8f0";
+      bar.style.borderRadius = "5px";
+      bar.style.overflow = "hidden";
+
+      const fill = document.createElement("div");
+      fill.style.height = "100%";
+      fill.style.width = barWidth + "px";
+      fill.style.backgroundColor = getMetricColor(metric.value);
+      fill.style.transition = "width 0.5s ease";
+
+      bar.appendChild(fill);
+      container.appendChild(label);
+      container.appendChild(bar);
+      chartDiv.appendChild(container);
+    });
+  }
+
+  function getMetricColor(value) {
+    if (value >= 85) return "#4caf50";
+    if (value >= 70) return "#2196f3";
+    if (value >= 50) return "#ff9800";
+    return "#f44336";
+  }
+
+  function closeAccuracyModal() {
+    document.getElementById("accuracyModal").style.display = "none";
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function (event) {
+    const modal = document.getElementById("accuracyModal");
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+</script>
+{% endblock %}
