@@ -1,141 +1,47 @@
-program_name,modality,budget,learning_style,career_goal,motivation,related_programs
-BSEdu,face_to_face,medium,visual,become a developer,personal_growth,"ABM Track, BSCS, HUMSS Track, ICT Track"
-ABM Track,online,high,reading,become a engineer,personal_growth,"BSIT, STEM Track, TVL - ICT, BSCriminology"
-BSHRM,blended,low,visual,work in hospitality,passion,"BSAgri, TVL - ICT, BSEdu, BSCriminology"
-BSBA,modular,free,reading,become a technician,career_advancement,"TVL - ICT, ABM Track, Diploma - Welding, ICT Track"
-TVL - Automotive,online,free,hands_on,work in service,personal_growth,"BSCriminology, BSBA, BSCS, BSN"
-BSN,face_to_face,low,audio,become a teacher,personal_growth,"STEM Track, BSHRM, BSBA, ABM Track"
-STEM Track,modular,free,hands_on,work in service,career_advancement,"BSCriminology, BSN, TVL - ICT, BSArch"
-BSBA,face_to_face,free,hands_on,work in logistics,better_salary,"Diploma - Welding, ICT Track, BSAgri, BSBA"
-BSEdu,modular,medium,reading,become a developer,family_support,"ABM Track, ICT Track, TVL - Automotive, BSBA"
-BSCS,modular,medium,reading,become a developer,better_salary,"TVL - Automotive, BSAgri, BSN, BSCS"
-Diploma - Welding,face_to_face,free,audio,work in tech,better_salary,"TVL - Automotive, BSEdu, BSN, ICT Track"
-BSEdu,face_to_face,free,visual,work in health,better_salary,"ABM Track, ICT Track, BSBA, BSN"
-TVL - ICT,online,high,audio,become a teacher,passion,"BSCS, ICT Track, BSArch, TVL - Automotive"
-BSCriminology,face_to_face,low,hands_on,become a teacher,career_advancement,"ICT Track, Diploma - Welding, TVL - ICT, TVL - Automotive"
-BSHRM,face_to_face,medium,audio,become a technician,personal_growth,"BSN, BSEdu, BSCS, HUMSS Track"
-BSArch,face_to_face,high,visual,become a technician,better_salary,"BSArch, BSIT, Diploma - Welding, TVL - Automotive"
-HUMSS Track,online,medium,audio,work in creative,family_support,"BSBA, TVL - Automotive, BSN, BSEdu"
-HUMSS Track,face_to_face,low,audio,become a technician,better_salary,"BSArch, BSHRM, TVL - Automotive, ABM Track"
-BSN,online,low,visual,work in logistics,personal_growth,"ABM Track, STEM Track, ICT Track, HUMSS Track"
-STEM Track,blended,low,visual,work in business,career_advancement,"ABM Track, BSBA, TVL - ICT, BSCriminology"
-BSArch,online,high,visual,become a nurse,family_support,"BSArch, TVL - Automotive, BSIT, BSAgri"
-BSHRM,blended,medium,audio,become a teacher,passion,"BSCS, ICT Track, BSCriminology, BSArch"
-Diploma - Welding,modular,free,hands_on,become a nurse,better_salary,"BSBA, BSIT, BSAgri, TVL - Automotive"
-BSAgri,online,medium,hands_on,become a technician,personal_growth,"BSIT, BSAgri, BSEdu, Diploma - Welding"
-BSN,online,medium,reading,become a developer,better_salary,"BSCriminology, HUMSS Track, BSBA, BSCS"
-ICT Track,blended,free,hands_on,become a nurse,personal_growth,"Diploma - Welding, BSN, HUMSS Track, BSCriminology"
-STEM Track,online,high,visual,become a technician,family_support,"Diploma - Welding, BSArch, BSCriminology, HUMSS Track"
-BSCriminology,online,free,audio,work in health,career_advancement,"HUMSS Track, BSIT, Diploma - Welding, BSEdu"
-BSAgri,blended,low,reading,become a technician,personal_growth,"BSBA, HUMSS Track, BSCS, BSIT"
-Diploma - Welding,blended,medium,visual,become a developer,family_support,"BSN, TVL - ICT, BSIT, HUMSS Track"
-STEM Track,blended,medium,reading,become a technician,better_salary,"ABM Track, BSEdu, Diploma - Welding, BSIT"
-BSHRM,blended,low,audio,become a nurse,better_salary,"TVL - Automotive, BSHRM, BSEdu, BSAgri"
-BSCriminology,face_to_face,medium,visual,work in service,better_salary,"HUMSS Track, TVL - ICT, BSAgri, TVL - Automotive"
-BSCS,modular,medium,audio,become a nurse,career_advancement,"Diploma - Welding, ABM Track, BSHRM, TVL - Automotive"
-BSCriminology,face_to_face,medium,visual,work in trade,better_salary,"ABM Track, BSAgri, Diploma - Welding, BSArch"
-ABM Track,face_to_face,high,reading,work in service,passion,"BSCriminology, ABM Track, BSEdu, Diploma - Welding"
-BSHRM,modular,medium,visual,become a developer,personal_growth,"Diploma - Welding, ICT Track, STEM Track, BSN"
-TVL - ICT,modular,high,audio,become a teacher,personal_growth,"TVL - ICT, ICT Track, BSArch, ABM Track"
-STEM Track,modular,low,reading,work in service,better_salary,"BSAgri, BSIT, TVL - ICT, BSCS"
-BSCS,blended,medium,hands_on,work in agriculture,family_support,"BSIT, ICT Track, BSEdu, BSBA"
-BSHRM,face_to_face,high,reading,work in business,career_advancement,"BSN, HUMSS Track, BSEdu, BSHRM"
-BSN,online,high,audio,work in creative,career_advancement,"TVL - ICT, BSHRM, BSIT, BSEdu"
-TVL - ICT,face_to_face,free,audio,work in trade,passion,"BSCriminology, ICT Track, BSCS, BSAgri"
-BSCriminology,modular,medium,hands_on,work in business,family_support,"Diploma - Welding, ICT Track, BSCriminology, BSHRM"
-HUMSS Track,modular,high,audio,become a nurse,better_salary,"BSCriminology, Diploma - Welding, BSIT, BSN"
-BSN,face_to_face,medium,reading,become a teacher,career_advancement,"ABM Track, HUMSS Track, BSEdu, BSCS"
-BSCS,blended,free,reading,work in agriculture,passion,"BSBA, ICT Track, BSHRM, BSEdu"
-ICT Track,face_to_face,high,audio,become a teacher,passion,"BSArch, STEM Track, ICT Track, ABM Track"
-BSCS,modular,medium,visual,work in health,better_salary,"ABM Track, STEM Track, BSCriminology, BSEdu"
-BSBA,modular,high,reading,work in service,career_advancement,"BSBA, BSArch, BSN, ABM Track"
-TVL - Automotive,online,high,audio,become a nurse,family_support,"Diploma - Welding, BSEdu, BSN, BSBA"
-BSEdu,online,medium,reading,work in agriculture,personal_growth,"BSBA, BSCS, BSAgri, BSArch"
-BSArch,blended,free,hands_on,work in education,passion,"BSCriminology, BSAgri, BSHRM, HUMSS Track"
-Diploma - Welding,blended,free,hands_on,become a teacher,better_salary,"ABM Track, BSHRM, BSEdu, Diploma - Welding"
-ABM Track,modular,free,audio,work in logistics,personal_growth,"BSArch, BSIT, BSBA, ICT Track"
-BSArch,modular,medium,reading,become a technician,personal_growth,"BSCriminology, BSEdu, BSCS, TVL - Automotive"
-BSIT,modular,high,audio,become a nurse,better_salary,"BSN, BSBA, BSCS, BSIT"
-TVL - Automotive,face_to_face,high,visual,work in service,better_salary,"BSBA, BSCS, BSArch, TVL - Automotive"
-BSBA,online,medium,visual,become a teacher,personal_growth,"TVL - ICT, BSBA, HUMSS Track, BSN"
-BSHRM,face_to_face,medium,reading,become a technician,better_salary,"Diploma - Welding, STEM Track, BSArch, TVL - Automotive"
-BSCriminology,face_to_face,low,visual,become a nurse,passion,"BSHRM, TVL - Automotive, BSArch, ICT Track"
-BSCriminology,face_to_face,free,audio,become a nurse,career_advancement,"BSBA, TVL - ICT, BSIT, HUMSS Track"
-BSIT,online,medium,hands_on,work in tech,better_salary,"TVL - ICT, BSHRM, BSIT, BSAgri"
-TVL - ICT,blended,medium,hands_on,work in education,passion,"HUMSS Track, BSCriminology, BSBA, ABM Track"
-TVL - Automotive,blended,high,reading,work in hospitality,better_salary,"HUMSS Track, STEM Track, TVL - Automotive, BSN"
-BSBA,online,low,hands_on,work in agriculture,personal_growth,"TVL - ICT, BSEdu, STEM Track, BSAgri"
-BSIT,face_to_face,medium,audio,work in agriculture,personal_growth,"ABM Track, BSBA, BSN, Diploma - Welding"
-BSN,face_to_face,low,audio,become a technician,family_support,"BSBA, HUMSS Track, TVL - ICT, BSHRM"
-BSArch,blended,medium,audio,become a nurse,family_support,"TVL - ICT, BSCS, BSAgri, BSEdu"
-TVL - Automotive,face_to_face,free,reading,become a technician,passion,"HUMSS Track, BSEdu, ICT Track, TVL - ICT"
-ABM Track,blended,free,audio,become a teacher,family_support,"ABM Track, ICT Track, BSArch, HUMSS Track"
-HUMSS Track,face_to_face,high,reading,become a engineer,career_advancement,"ABM Track, BSIT, STEM Track, TVL - Automotive"
-BSIT,modular,high,reading,work in hospitality,career_advancement,"BSArch, BSN, BSBA, BSHRM"
-TVL - ICT,online,free,reading,work in logistics,career_advancement,"BSCS, BSHRM, ABM Track, Diploma - Welding"
-BSHRM,online,free,visual,become a teacher,better_salary,"TVL - Automotive, ICT Track, TVL - ICT, HUMSS Track"
-TVL - ICT,online,free,audio,work in service,personal_growth,"ICT Track, BSCS, BSN, HUMSS Track"
-Diploma - Welding,online,medium,visual,work in tech,family_support,"TVL - Automotive, BSN, Diploma - Welding, STEM Track"
-Diploma - Welding,face_to_face,low,visual,work in tech,career_advancement,"BSAgri, TVL - Automotive, BSArch, BSHRM"
-BSBA,blended,medium,visual,become a teacher,better_salary,"TVL - ICT, BSBA, BSEdu, HUMSS Track"
-STEM Track,online,free,reading,work in service,personal_growth,"BSIT, HUMSS Track, Diploma - Welding, BSN"
-TVL - Automotive,modular,medium,reading,work in trade,personal_growth,"Diploma - Welding, BSEdu, BSCriminology, STEM Track"
-BSHRM,face_to_face,high,reading,work in creative,family_support,"BSBA, BSCS, TVL - ICT, BSAgri"
-BSN,modular,free,visual,become a nurse,career_advancement,"BSEdu, BSBA, BSAgri, Diploma - Welding"
-TVL - Automotive,blended,high,hands_on,work in logistics,better_salary,"HUMSS Track, BSN, BSAgri, BSCS"
-BSN,blended,high,audio,become a teacher,career_advancement,"STEM Track, ABM Track, ICT Track, BSEdu"
-BSArch,modular,high,visual,become a teacher,personal_growth,"BSCS, BSCriminology, BSArch, BSAgri"
-BSAgri,modular,high,reading,work in service,family_support,"BSCS, BSHRM, STEM Track, Diploma - Welding"
-BSN,face_to_face,low,audio,work in health,passion,"ICT Track, STEM Track, BSCriminology, BSCS"
-ICT Track,modular,high,audio,become a teacher,passion,"BSEdu, BSAgri, STEM Track, ABM Track"
-BSCS,online,free,hands_on,become a developer,passion,"BSIT, HUMSS Track, BSCriminology, Diploma - Welding"
-STEM Track,online,medium,visual,become a nurse,passion,"TVL - ICT, BSCriminology, BSCS, HUMSS Track"
-TVL - ICT,face_to_face,low,reading,work in health,passion,"HUMSS Track, ABM Track, BSIT, BSEdu"
-ABM Track,modular,low,audio,work in education,personal_growth,"Diploma - Welding, BSBA, BSEdu, BSHRM"
-BSArch,modular,low,audio,become a technician,passion,"BSCriminology, BSAgri, TVL - ICT, BSBA"
-Diploma - Welding,blended,free,hands_on,work in hospitality,personal_growth,"BSAgri, ICT Track, HUMSS Track, BSIT"
-TVL - ICT,modular,high,reading,become a engineer,career_advancement,"STEM Track, BSEdu, BSArch, TVL - ICT"
-HUMSS Track,modular,medium,visual,become a engineer,career_advancement,"STEM Track, HUMSS Track, BSHRM, BSAgri"
-BSHRM,face_to_face,low,hands_on,become a nurse,family_support,"ICT Track, BSCriminology, Diploma - Welding, STEM Track"
-ICT Track,online,free,reading,become a developer,career_advancement,"ABM Track, BSAgri, STEM Track, HUMSS Track"
-STEM Track,modular,high,reading,become a developer,personal_growth,"TVL - ICT, Diploma - Welding, TVL - Automotive, BSEdu"
-BSHRM,blended,low,audio,become a technician,family_support,"HUMSS Track, ICT Track, Diploma - Welding, TVL - Automotive"
-BSArch,face_to_face,medium,visual,work in logistics,career_advancement,"TVL - Automotive, BSCS, BSCriminology, Diploma - Welding"
-BSBA,modular,low,reading,become a nurse,family_support,"TVL - ICT, BSCS, BSN, BSCriminology"
-BSEdu,face_to_face,free,audio,work in business,personal_growth,"STEM Track, BSCriminology, Diploma - Welding, BSHRM"
-TVL - Automotive,face_to_face,medium,hands_on,become a nurse,family_support,"BSEdu, BSHRM, BSCriminology, TVL - Automotive"
-BSAgri,face_to_face,low,hands_on,become a teacher,family_support,"TVL - Automotive, BSAgri, BSCriminology, STEM Track"
-BSHRM,face_to_face,high,reading,become a teacher,family_support,"STEM Track, BSCriminology, Diploma - Welding, BSN"
-STEM Track,modular,low,visual,work in service,passion,"TVL - Automotive, BSEdu, TVL - ICT, BSAgri"
-STEM Track,face_to_face,medium,hands_on,become a engineer,family_support,"BSArch, BSCriminology, TVL - Automotive, STEM Track"
-BSCS,modular,free,visual,work in creative,family_support,"BSN, BSCriminology, BSAgri, BSArch"
-TVL - ICT,face_to_face,medium,visual,work in creative,personal_growth,"BSIT, BSCS, STEM Track, BSHRM"
-ICT Track,face_to_face,free,audio,become a teacher,personal_growth,"BSBA, HUMSS Track, BSEdu, BSAgri"
-BSCS,modular,low,visual,become a teacher,better_salary,"BSEdu, BSCS, BSCriminology, HUMSS Track"
-BSCriminology,blended,free,hands_on,work in creative,family_support,"BSCriminology, TVL - Automotive, BSIT, BSBA"
-BSArch,online,low,hands_on,work in agriculture,family_support,"BSN, BSBA, TVL - ICT, BSEdu"
-ICT Track,blended,medium,visual,become a technician,family_support,"BSCriminology, BSIT, BSArch, BSN"
-ICT Track,face_to_face,free,reading,work in logistics,passion,"BSCriminology, ICT Track, BSIT, STEM Track"
-ICT Track,modular,medium,audio,work in health,career_advancement,"TVL - ICT, BSEdu, BSN, BSBA"
-BSN,blended,medium,visual,work in creative,better_salary,"Diploma - Welding, BSCriminology, BSAgri, TVL - ICT"
-ICT Track,blended,low,visual,become a nurse,career_advancement,"BSEdu, BSHRM, TVL - ICT, BSIT"
-ICT Track,online,high,hands_on,become a engineer,career_advancement,"TVL - ICT, HUMSS Track, BSCS, BSCriminology"
-BSIT,online,high,hands_on,work in agriculture,personal_growth,"BSArch, BSAgri, BSCriminology, BSHRM"
-BSCS,blended,free,visual,work in tech,better_salary,"BSCriminology, BSBA, Diploma - Welding, BSN"
-BSIT,modular,free,audio,become a nurse,better_salary,"BSAgri, BSArch, ICT Track, BSEdu"
-BSEdu,face_to_face,medium,reading,work in education,better_salary,"Diploma - Welding, BSCS, HUMSS Track, BSCriminology"
-BSN,modular,high,audio,become a developer,passion,"BSCS, HUMSS Track, ICT Track, BSAgri"
-BSIT,blended,high,reading,work in service,family_support,"Diploma - Welding, BSEdu, BSHRM, ICT Track"
-BSAgri,face_to_face,high,visual,work in service,better_salary,"BSAgri, TVL - Automotive, BSIT, Diploma - Welding"
-BSN,face_to_face,low,audio,work in agriculture,personal_growth,"BSCS, BSHRM, STEM Track, Diploma - Welding"
-HUMSS Track,blended,free,hands_on,work in trade,better_salary,"BSCS, BSN, BSBA, BSArch"
-TVL - ICT,blended,free,audio,work in creative,passion,"Diploma - Welding, BSCriminology, BSHRM, BSAgri"
-BSIT,blended,low,reading,become a technician,personal_growth,"BSCriminology, STEM Track, BSAgri, ICT Track"
-BSN,blended,free,visual,work in logistics,better_salary,"STEM Track, BSHRM, BSCriminology, BSIT"
-STEM Track,face_to_face,high,audio,become a teacher,passion,"BSArch, STEM Track, BSCriminology, BSBA"
-BSCS,blended,low,reading,become a technician,passion,"BSCriminology, BSArch, STEM Track, BSHRM"
-BSCriminology,modular,medium,visual,work in trade,personal_growth,"BSAgri, BSArch, STEM Track, TVL - ICT"
-BSCS,online,free,audio,work in business,career_advancement,"HUMSS Track, BSArch, Diploma - Welding, TVL - ICT"
-BSBA,blended,medium,visual,work in logistics,personal_growth,"HUMSS Track, BSN, TVL - Automotive, BSCS"
-BSCriminology,online,high,reading,become a technician,passion,"ABM Track, BSHRM, STEM Track, HUMSS Track"
-TVL - ICT,face_to_face,medium,audio,become a engineer,personal_growth,"BSBA, HUMSS Track, ICT Track, BSCS"
+program_name,program_type,modality,budget,learning_style,motivation
+STEM Track SHS,shs,full_time,low,kinesthetic,career-focused
+STEM Track SHS,shs,full_time,low,kinesthetic,career-focused
+Humanities Track SHS,shs,full_time,low,visual,career-focused
+Humanities Track SHS,shs,full_time,low,visual,career-focused
+ABM Track SHS,shs,full_time,low,auditory,career-focused
+ABM Track SHS,shs,full_time,low,auditory,career-focused
+Sports Science SHS,shs,full_time,medium,kinesthetic,interest-based
+Sports Science SHS,shs,full_time,medium,kinesthetic,interest-based
+Arts Track SHS,shs,full_time,medium,visual,interest-based
+Arts Track SHS,shs,full_time,medium,visual,interest-based
+Bachelor of Science in Computer Science,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Computer Science,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Engineering,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Engineering,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Nursing,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Nursing,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Business Administration,college,full_time,high,auditory,career-focused
+Bachelor of Science in Business Administration,college,full_time,high,auditory,career-focused
+Bachelor of Arts in Education,college,full_time,medium,auditory,career-focused
+Bachelor of Arts in Education,college,full_time,medium,auditory,career-focused
+Bachelor of Arts in Communication,college,full_time,medium,auditory,interest-based
+Bachelor of Arts in Communication,college,full_time,medium,auditory,interest-based
+Bachelor of Fine Arts,college,full_time,high,visual,interest-based
+Bachelor of Fine Arts,college,full_time,high,visual,interest-based
+Bachelor of Science in Psychology,college,full_time,medium,auditory,interest-based
+Bachelor of Science in Psychology,college,full_time,medium,auditory,interest-based
+Bachelor of Science in Information Technology,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Information Technology,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Accountancy,college,full_time,high,auditory,career-focused
+Bachelor of Science in Accountancy,college,full_time,high,auditory,career-focused
+Bachelor of Science in Civil Engineering,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Civil Engineering,college,full_time,high,kinesthetic,career-focused
+Bachelor of Science in Architecture,college,full_time,high,visual,career-focused
+Bachelor of Science in Architecture,college,full_time,high,visual,career-focused
+Bachelor of Science in Hospitality Management,college,full_time,medium,auditory,career-focused
+Bachelor of Science in Hospitality Management,college,full_time,medium,auditory,career-focused
+Bachelor of Science in Tourism,college,full_time,medium,visual,interest-based
+Bachelor of Science in Tourism,college,full_time,medium,visual,interest-based
+ALS Accreditation and Equivalency (A&E),als,part_time,low,visual,career-focused
+ALS Accreditation and Equivalency (A&E),als,part_time,low,visual,career-focused
+ALS Professional Development,als,part_time,medium,auditory,career-focused
+ALS Professional Development,als,part_time,medium,auditory,career-focused
+ALS Entrepreneurship,als,part_time,low,kinesthetic,interest-based
+ALS Entrepreneurship,als,part_time,low,kinesthetic,interest-based
+ALS Tech Skills,als,part_time,medium,kinesthetic,career-focused
+ALS Tech Skills,als,part_time,medium,kinesthetic,career-focused
