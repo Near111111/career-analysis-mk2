@@ -1,67 +1,322 @@
-<!-- templates/login.html -->
-{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
-%}
-<div class="auth-container">
-  <div class="auth-box">
-    <h1>Welcome Back</h1>
-    <p class="subtitle">Login to continue your educational journey</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PathwayPH - Login</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    <form id="loginForm">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required />
-      </div>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #d4d0c8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required />
-      </div>
+      .header {
+        background-color: #c8c4bc;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        border-bottom: 2px solid #a8a49c;
+      }
 
-      <button type="submit" class="btn-primary">Login</button>
-      <div id="message" class="message"></div>
-    </form>
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
 
-    <p class="switch-auth">
-      Don't have an account? <a href="/register">Register here</a>
-    </p>
+      .logo {
+        width: 100px;
+        height: auto;
+      }
 
-    <hr style="margin: 20px 0" />
+      .logo img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
 
-    <p class="admin-login-link">
-      <a href="/admin/login" class="btn-admin">🔐 Admin Login</a>
-    </p>
-  </div>
-  {% endblock %} {% block scripts %}
-  <script>
-    document
-      .getElementById("loginForm")
-      .addEventListener("submit", async (e) => {
-        e.preventDefault();
+      .logo-text h1 {
+        font-size: 32px;
+        font-weight: bold;
+        color: #2c3e50;
+        letter-spacing: 1px;
+      }
 
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        const messageDiv = document.getElementById("message");
+      .pathway {
+        color: #2c3e50;
+      }
 
-        try {
-          const response = await fetch("/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password }),
-          });
+      .ph {
+        color: #4a90e2;
+      }
 
-          const data = await response.json();
+      .tagline {
+        font-size: 10px;
+        color: #003366;
+        text-align: center;
+        margin-top: 2px;
+        letter-spacing: 1px;
+        font-weight: 600;
+      }
 
-          if (data.success) {
-            window.location.href = "/dashboard";
-          } else {
-            messageDiv.textContent = data.message;
-            messageDiv.className = "message error";
-          }
-        } catch (error) {
-          messageDiv.textContent = "An error occurred";
-          messageDiv.className = "message error";
+      .header-title {
+        font-size: 28px;
+        color: #2c3e50;
+        font-weight: 400;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+      }
+
+      .login-container {
+        background-color: #f5f3ed;
+        border: 3px solid #000;
+        border-radius: 50px;
+        padding: 50px 60px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .welcome-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .welcome-subtitle {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 40px;
+      }
+
+      .form-group {
+        margin-bottom: 30px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #000;
+        background-color: #fff;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus {
+        border-color: #4a90e2;
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 15px;
+        background-color: #5dade2;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background-color 0.3s;
+      }
+
+      .login-btn:hover {
+        background-color: #3498db;
+      }
+
+      .register-section {
+        text-align: center;
+        margin: 30px 0;
+        padding-top: 20px;
+        border-top: 2px solid #ccc;
+      }
+
+      .register-section p {
+        font-size: 15px;
+        color: #2c3e50;
+      }
+
+      .register-section a {
+        color: #5dade2;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .register-section a:hover {
+        text-decoration: underline;
+      }
+
+      .admin-login {
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      .admin-login a {
+        color: #f39c12;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .admin-login a:hover {
+        text-decoration: underline;
+      }
+
+      .message {
+        padding: 12px;
+        border-radius: 5px;
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .message.error {
+        background-color: #fee;
+        color: #c33;
+        border: 1px solid #fcc;
+      }
+
+      .message.success {
+        background-color: #efe;
+        color: #3c3;
+        border: 1px solid #cfc;
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          flex-direction: column;
+          gap: 15px;
+          padding: 15px 20px;
         }
-      });
-  </script>
-  {% endblock %}
-</div>
+
+        .header-title {
+          font-size: 20px;
+        }
+
+        .login-container {
+          padding: 40px 30px;
+          border-radius: 30px;
+        }
+
+        .welcome-title {
+          font-size: 24px;
+        }
+
+        .logo {
+          width: 80px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo-section">
+        <div class="logo">
+          <img src="/static/Edulift.png" alt="EduLift Logo" />
+        </div>
+      </div>
+      <div class="header-title">
+        " Your Path to Learning and Career Growth Starts Here! "
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="login-container">
+        <h2 class="welcome-title">Welcome Back!</h2>
+        <p class="welcome-subtitle">
+          Login to continue your educational journey
+        </p>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+
+          <button type="submit" class="login-btn">LOGIN</button>
+          <div id="message" class="message" style="display: none"></div>
+
+          <div class="register-section">
+            <p>Don't have an account? <a href="/register">Register here</a></p>
+          </div>
+
+          <div class="admin-login">
+            <a href="/admin/login">🔐 Admin Login</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+          const messageDiv = document.getElementById("message");
+
+          try {
+            const response = await fetch("/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              messageDiv.textContent = "Login successful! Redirecting...";
+              messageDiv.className = "message success";
+              messageDiv.style.display = "block";
+              setTimeout(() => {
+                window.location.href = "/dashboard";
+              }, 1000);
+            } else {
+              messageDiv.textContent = data.message || "Login failed";
+              messageDiv.className = "message error";
+              messageDiv.style.display = "block";
+            }
+          } catch (error) {
+            messageDiv.textContent = "An error occurred: " + error.message;
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -89,31 +89,7 @@ body {
 }
 
 /* Auth Pages */
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-}
-
-.auth-box {
-  background: white;
-  padding: 3rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 450px;
-}
-
-.auth-box h1 {
-  color: var(--dark);
-  margin-bottom: 0.5rem;
-}
-
-.subtitle {
-  color: var(--text);
-  margin-bottom: 2rem;
-}
+/* Styles moved to login.html and register.html */
 
 /* Form Styles */
 .form-group {
