@@ -1,75 +1,337 @@
-<!-- templates/register.html -->
-{% extends "base.html" %} {% block title %}Register{% endblock %} {% block
-content %}
-<div class="auth-container">
-  <div class="auth-box">
-    <h1>Create Account</h1>
-    <p class="subtitle">Start your pathway to success</p>
-
-    <form id="registerForm">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required />
-      </div>
-
-      <div class="form-group">
-        <label for="confirm_password">Confirm Password</label>
-        <input
-          type="password"
-          id="confirm_password"
-          name="confirm_password"
-          required
-        />
-      </div>
-
-      <button type="submit" class="btn-primary">Register</button>
-      <div id="message" class="message"></div>
-    </form>
-
-    <p class="switch-auth">
-      Already have an account? <a href="/">Login here</a>
-    </p>
-  </div>
-</div>
-{% endblock %} {% block scripts %}
-<script>
-  document
-    .getElementById("registerForm")
-    .addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      const confirm_password =
-        document.getElementById("confirm_password").value;
-      const messageDiv = document.getElementById("message");
-
-      try {
-        const response = await fetch("/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password, confirm_password }),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          messageDiv.textContent = "Registration successful! Redirecting...";
-          messageDiv.className = "message success";
-          setTimeout(() => (window.location.href = "/"), 1500);
-        } else {
-          messageDiv.textContent = data.message;
-          messageDiv.className = "message error";
-        }
-      } catch (error) {
-        messageDiv.textContent = "An error occurred";
-        messageDiv.className = "message error";
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PathwayPH - Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-    });
-</script>
-{% endblock %}
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background-color: #d4d0c8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background-color: #c8c4bc;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        border-bottom: 2px solid #a8a49c;
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo {
+        width: 100px;
+        height: auto;
+      }
+
+      .logo img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .header-title {
+        font-size: 28px;
+        color: #2c3e50;
+        font-weight: 400;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+      }
+
+      .register-container {
+        background-color: #f5f3ed;
+        border: 3px solid #000;
+        border-radius: 50px;
+        padding: 50px 60px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .welcome-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .welcome-subtitle {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 40px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #000;
+        background-color: #fff;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+        font-family: "Inter", sans-serif;
+        border-radius: 5px;
+      }
+
+      .form-group input:focus {
+        border-color: #4a90e2;
+      }
+
+      .register-btn {
+        width: 100%;
+        padding: 15px;
+        background-color: #5dade2;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background-color 0.3s;
+        font-family: "Inter", sans-serif;
+      }
+
+      .register-btn:hover {
+        background-color: #3498db;
+      }
+
+      .login-section {
+        text-align: center;
+        margin: 30px 0 0 0;
+        padding-top: 20px;
+        border-top: 2px solid #ccc;
+      }
+
+      .login-section p {
+        font-size: 15px;
+        color: #2c3e50;
+      }
+
+      .login-section a {
+        color: #5dade2;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .login-section a:hover {
+        text-decoration: underline;
+      }
+
+      .message {
+        padding: 12px;
+        border-radius: 5px;
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .message.error {
+        background-color: #fee;
+        color: #c33;
+        border: 1px solid #fcc;
+      }
+
+      .message.success {
+        background-color: #efe;
+        color: #3c3;
+        border: 1px solid #cfc;
+      }
+
+      .footer {
+        background-color: #b8b4ac;
+        padding: 12px 20px;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 14px;
+        border-top: 2px solid #a8a49c;
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          flex-direction: column;
+          gap: 15px;
+          padding: 15px 20px;
+        }
+
+        .header-title {
+          font-size: 20px;
+        }
+
+        .register-container {
+          padding: 40px 30px;
+          border-radius: 30px;
+        }
+
+        .welcome-title {
+          font-size: 24px;
+        }
+
+        .logo {
+          width: 80px;
+        }
+
+        .footer {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo-section">
+        <div class="logo">
+          <img src="/static/Edulift.png" alt="EduLift Logo" />
+        </div>
+      </div>
+      <div class="header-title">
+        " Your Path to Learning and Career Growth Starts Here! "
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="register-container">
+        <h2 class="welcome-title">Create Account</h2>
+        <p class="welcome-subtitle">Start your pathway to success</p>
+
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a password"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input
+              type="password"
+              id="confirm_password"
+              name="confirm_password"
+              placeholder="Confirm your password"
+              required
+            />
+          </div>
+
+          <button type="submit" class="register-btn">REGISTER</button>
+          <div id="message" class="message" style="display: none"></div>
+
+          <div class="login-section">
+            <p>Already have an account? <a href="/">Login here</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2025 EduLift - Career and Learning Support Recommendation
+    </div>
+
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+          const confirm_password =
+            document.getElementById("confirm_password").value;
+          const messageDiv = document.getElementById("message");
+
+          // Password validation
+          if (password !== confirm_password) {
+            messageDiv.textContent = "Passwords do not match";
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
+            return;
+          }
+
+          try {
+            const response = await fetch("/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password, confirm_password }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              messageDiv.textContent =
+                "Registration successful! Redirecting...";
+              messageDiv.className = "message success";
+              messageDiv.style.display = "block";
+              setTimeout(() => {
+                window.location.href = "/";
+              }, 1500);
+            } else {
+              messageDiv.textContent = data.message || "Registration failed";
+              messageDiv.className = "message error";
+              messageDiv.style.display = "block";
+            }
+          } catch (error) {
+            messageDiv.textContent = "An error occurred: " + error.message;
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
+          }
+        });
+    </script>
+  </body>
+</html>

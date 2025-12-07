@@ -1,81 +1,646 @@
-<!-- templates/pathway_career.html -->
-{% extends "base.html" %} {% block title %}Career Options{% endblock %} {% block
-content %}
-<div class="pathway-container">
-  <h1>🎯 Explore Career Options</h1>
-  <p class="subtitle">Answer these questions to find careers that match you</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PathwayPH - Explore Career Options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-  <form id="careerForm">
-    <div class="form-group">
-      <label for="primary_skills">What are your strongest skills?</label>
-      <input
-        type="text"
-        id="primary_skills"
-        placeholder="e.g., communication, problem-solving, technical"
-        required
-      />
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background-color: #d4d0c8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background-color: #c8c4bc;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid #a8a49c;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+      }
+
+      .left-section {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo {
+        width: 80px;
+        height: auto;
+      }
+
+      .logo img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .logo-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #4a90e2;
+      }
+
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: #2c3e50;
+        font-size: 16px;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: #4a90e2;
+      }
+
+      .nav-menu a.active {
+        color: #4a90e2;
+        font-weight: 600;
+      }
+
+      .logout-btn {
+        background-color: #e74c3c;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 20px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-family: "Inter", sans-serif;
+      }
+
+      .logout-btn:hover {
+        background-color: #c0392b;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 120px 20px 40px;
+      }
+
+      .pathway-container {
+        background-color: #f5f3ed;
+        border: 3px solid #000;
+        border-radius: 50px;
+        padding: 50px 60px;
+        width: 100%;
+        max-width: 700px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .page-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .page-subtitle {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 40px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #000;
+        background-color: #fff;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+        font-family: "Inter", sans-serif;
+        border-radius: 5px;
+      }
+
+      .form-group select {
+        cursor: pointer;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: #4a90e2;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background-color: #5dade2;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+        font-family: "Inter", sans-serif;
+      }
+
+      .submit-btn:hover {
+        background-color: #3498db;
+      }
+
+      .back-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: transparent;
+        color: #5dade2;
+        border: 2px solid #5dade2;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s;
+        font-family: "Inter", sans-serif;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .back-btn:hover {
+        background-color: #5dade2;
+        color: white;
+      }
+
+      .results-container {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 2px solid #ccc;
+      }
+
+      .result-card {
+        background-color: #fff;
+        border: 2px solid #000;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+      }
+
+      .result-card:hover {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        border-color: #4a90e2;
+      }
+
+      .result-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .result-match {
+        display: inline-block;
+        background-color: #5dade2;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      .result-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      .result-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .meta-item {
+        font-size: 13px;
+      }
+
+      .meta-label {
+        font-weight: 600;
+        color: #7f8c8d;
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .meta-value {
+        color: #2c3e50;
+      }
+
+      .save-btn {
+        padding: 10px 20px;
+        background-color: #f39c12;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-family: "Inter", sans-serif;
+        margin-top: 10px;
+      }
+
+      .save-btn:hover {
+        background-color: #e67e22;
+      }
+
+      .message {
+        padding: 12px;
+        border-radius: 5px;
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .message.error {
+        background-color: #fee;
+        color: #c33;
+        border: 1px solid #fcc;
+      }
+
+      .message.success {
+        background-color: #efe;
+        color: #3c3;
+        border: 1px solid #cfc;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 16px;
+        color: #666;
+      }
+
+      .footer {
+        background-color: #b8b4ac;
+        padding: 12px 20px;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 14px;
+        border-top: 2px solid #a8a49c;
+      }
+
+      @media (max-width: 968px) {
+        .header {
+          padding: 15px 20px;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .left-section {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .nav-menu {
+          gap: 15px;
+          font-size: 14px;
+        }
+
+        .main-content {
+          padding: 200px 20px 40px;
+        }
+
+        .pathway-container {
+          padding: 40px 30px;
+          border-radius: 30px;
+        }
+
+        .page-title {
+          font-size: 26px;
+        }
+
+        .logo {
+          width: 60px;
+        }
+
+        .logo-text {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="left-section">
+        <div class="logo-section">
+          <div class="logo">
+            <img src="/static/Edulift.png" alt="PathwayPH Logo" />
+          </div>
+          <div class="logo-text">PathwayPH</div>
+        </div>
+        <nav class="nav-menu">
+          <a href="/dashboard" class="active">Dashboard</a>
+          <a href="/my_recommendations">My Recommendations</a>
+          <a href="/profile">Profile</a>
+        </nav>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">Logout</button>
     </div>
 
-    <div class="form-group">
-      <label for="industry">Preferred Industry</label>
-      <select id="industry" required>
-        <option value="">Select...</option>
-        <option value="tech">Technology/IT</option>
-        <option value="business">Business/Sales</option>
-        <option value="health">Healthcare</option>
-        <option value="education">Education</option>
-        <option value="creative">Creative/Arts</option>
-        <option value="service">Service Industry</option>
-        <option value="trade">Skilled Trades</option>
-      </select>
+    <div class="main-content">
+      <div class="pathway-container">
+        <h1 class="page-title">🎯 Explore Career Options</h1>
+        <p class="page-subtitle">
+          Answer these questions to find careers that match you
+        </p>
+
+        <form id="careerForm">
+          <div class="form-group">
+            <label for="primary_skills">What are your strongest skills?</label>
+            <select id="primary_skills" required>
+              <option value="">Select...</option>
+              <option value="Communication">Communication</option>
+              <option value="Problem-solving">Problem-solving</option>
+              <option value="Technical">Technical</option>
+              <option value="Leadership">Leadership</option>
+              <option value="Creativity">Creativity</option>
+              <option value="Analytical">Analytical</option>
+              <option value="Organization">Organization</option>
+              <option value="Teamwork">Teamwork</option>
+              <option value="Customer Service">Customer Service</option>
+              <option value="Sales">Sales</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="industry">Preferred Industry</label>
+            <select id="industry" required>
+              <option value="">Select...</option>
+              <option value="tech">Technology/IT</option>
+              <option value="business">Business/Sales</option>
+              <option value="health">Healthcare</option>
+              <option value="education">Education</option>
+              <option value="creative">Creative/Arts</option>
+              <option value="service">Service Industry</option>
+              <option value="trade">Skilled Trades</option>
+              <option value="government">Government</option>
+              <option value="finance">Finance/Banking</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="salary">Expected Monthly Salary Range</label>
+            <select id="salary" required>
+              <option value="">Select...</option>
+              <option value="15k-25k">₱15,000 - ₱25,000</option>
+              <option value="25k-40k">₱25,000 - ₱40,000</option>
+              <option value="40k-60k">₱40,000 - ₱60,000</option>
+              <option value="60k+">₱60,000+</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="work_environment">Preferred Work Environment</label>
+            <select id="work_environment" required>
+              <option value="">Select...</option>
+              <option value="office">Office-based</option>
+              <option value="remote">Remote/Work from home</option>
+              <option value="field">Field work</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="outdoor">Outdoor</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            Get Career Recommendations
+          </button>
+          <a href="/dashboard" class="back-btn">Back to Dashboard</a>
+          <div id="message" class="message" style="display: none"></div>
+        </form>
+
+        <div id="results" class="results-container" style="display: none"></div>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="salary">Expected Monthly Salary Range</label>
-      <select id="salary" required>
-        <option value="">Select...</option>
-        <option value="15k-25k">₱15,000 - ₱25,000</option>
-        <option value="25k-40k">₱25,000 - ₱40,000</option>
-        <option value="40k-60k">₱40,000 - ₱60,000</option>
-        <option value="60k+">₱60,000+</option>
-      </select>
+    <div class="footer">
+      © 2025 PathwayPH - Career and Learning Support Recommendation
     </div>
 
-    <div class="form-group">
-      <label for="work_environment">Preferred Work Environment</label>
-      <select id="work_environment" required>
-        <option value="">Select...</option>
-        <option value="office">Office-based</option>
-        <option value="remote">Remote/Work from home</option>
-        <option value="field">Field work</option>
-        <option value="hybrid">Hybrid</option>
-      </select>
-    </div>
+    <script>
+      async function handleLogout() {
+        try {
+          const response = await fetch("/logout", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          window.location.href = "/login";
+        } catch (error) {
+          console.error("Logout error:", error);
+          window.location.href = "/login";
+        }
+      }
 
-    <button type="submit" class="btn-primary">
-      Get Career Recommendations
-    </button>
-    <a href="/dashboard" class="btn-secondary">Back to Dashboard</a>
-  </form>
+      // Form submission handler
+      document
+        .getElementById("careerForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const messageDiv = document.getElementById("message");
+          const resultsDiv = document.getElementById("results");
 
-  <div id="results" class="results-container" style="display: none"></div>
-</div>
-{% endblock %} {% block scripts %}
-<script src="{{ url_for('static', filename='pathway.js') }}"></script>
-<script>
-  document
-    .getElementById("careerForm")
-    .addEventListener("submit", async (e) => {
-      e.preventDefault();
+          const responses = {
+            primary_skills: document.getElementById("primary_skills").value,
+            industry: document.getElementById("industry").value,
+            salary: document.getElementById("salary").value,
+            work_environment: document.getElementById("work_environment").value,
+          };
 
-      const responses = {
-        primary_skills: document.getElementById("primary_skills").value,
-        industry: document.getElementById("industry").value,
-        salary: document.getElementById("salary").value,
-        work_environment: document.getElementById("work_environment").value,
-      };
+          // Show loading
+          resultsDiv.innerHTML =
+            '<div class="loading">Loading recommendations...</div>';
+          resultsDiv.style.display = "block";
+          messageDiv.style.display = "none";
 
-      await submitPathway("career", responses);
-    });
-</script>
-{% endblock %}
+          try {
+            const response = await fetch("/pathway/career", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(responses),
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.recommendations) {
+              displayResults(data.recommendations);
+            } else {
+              messageDiv.textContent =
+                data.message || "Failed to get recommendations";
+              messageDiv.className = "message error";
+              messageDiv.style.display = "block";
+              resultsDiv.style.display = "none";
+            }
+          } catch (error) {
+            messageDiv.textContent = "An error occurred: " + error.message;
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
+            resultsDiv.style.display = "none";
+          }
+        });
+
+      function displayResults(recommendations) {
+        const resultsDiv = document.getElementById("results");
+        let html = "";
+
+        recommendations.forEach((rec, index) => {
+          html += `
+            <div class="result-card">
+              <h3 class="result-title">${rec.title}</h3>
+              <span class="result-match">${Math.round(rec.match)}% Match</span>
+              <p class="result-description">${
+                rec.description || "A great career opportunity for you."
+              }</p>
+              
+              <div class="result-meta">
+                ${
+                  rec.metadata && rec.metadata.salary
+                    ? `
+                  <div class="meta-item">
+                    <span class="meta-label">Salary Range</span>
+                    <span class="meta-value">${rec.metadata.salary}</span>
+                  </div>
+                `
+                    : ""
+                }
+                ${
+                  rec.metadata && rec.metadata.industry
+                    ? `
+                  <div class="meta-item">
+                    <span class="meta-label">Industry</span>
+                    <span class="meta-value">${rec.metadata.industry}</span>
+                  </div>
+                `
+                    : ""
+                }
+                ${
+                  rec.metadata && rec.metadata.environment
+                    ? `
+                  <div class="meta-item">
+                    <span class="meta-label">Environment</span>
+                    <span class="meta-value">${rec.metadata.environment}</span>
+                  </div>
+                `
+                    : ""
+                }
+              </div>
+              
+              <button class="save-btn" onclick="saveRecommendation('career', ${index})">
+                ⭐ Save Recommendation
+              </button>
+            </div>
+          `;
+        });
+
+        resultsDiv.innerHTML = html;
+        resultsDiv.style.display = "block";
+      }
+
+      async function saveRecommendation(pathway, index) {
+        const resultsDiv = document.getElementById("results");
+        const cards = resultsDiv.querySelectorAll(".result-card");
+        const card = cards[index];
+
+        const title = card.querySelector(".result-title").textContent;
+        const matchText = card.querySelector(".result-match").textContent;
+        const match = parseFloat(matchText);
+
+        const metadata = {};
+        const metaItems = card.querySelectorAll(".meta-item");
+        metaItems.forEach((item) => {
+          const label = item
+            .querySelector(".meta-label")
+            .textContent.toLowerCase()
+            .replace(" ", "_");
+          const value = item.querySelector(".meta-value").textContent;
+          metadata[label] = value;
+        });
+
+        try {
+          const response = await fetch("/save_recommendation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              pathway_type: pathway,
+              recommendation: {
+                title: title,
+                match: match,
+                metadata: metadata,
+              },
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            alert("Recommendation saved successfully!");
+          } else {
+            alert("Failed to save recommendation: " + (data.message || ""));
+          }
+        } catch (error) {
+          alert("Error saving recommendation: " + error.message);
+        }
+      }
+    </script>
+  </body>
+</html>

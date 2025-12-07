@@ -1,132 +1,339 @@
-{% extends "base.html" %} {% block title %}Admin Login{% endblock %} {% block
-content %}
-<div class="auth-container">
-  <div class="form-card">
-    <h2>🔐 Admin Panel Login</h2>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PathwayPH - Admin Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    {% if error %}
-    <div class="alert alert-error"><strong>Error:</strong> {{ error }}</div>
-    {% endif %}
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background-color: #d4d0c8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-    <form method="POST" class="form-group">
-      <div>
-        <label for="email">Admin Email:</label>
-        <input
-          type="text"
-          id="email"
-          name="email"
-          required
-          placeholder="Enter admin email"
-        />
+      .header {
+        background-color: #c8c4bc;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        border-bottom: 2px solid #a8a49c;
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo {
+        width: 100px;
+        height: auto;
+      }
+
+      .logo img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .header-title {
+        font-size: 28px;
+        color: #2c3e50;
+        font-weight: 400;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+      }
+
+      .login-container {
+        background-color: #f5f3ed;
+        border: 3px solid #000;
+        border-radius: 50px;
+        padding: 50px 60px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .welcome-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .admin-icon {
+        font-size: 24px;
+        margin-right: 8px;
+      }
+
+      .welcome-subtitle {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 40px;
+      }
+
+      .form-group {
+        margin-bottom: 30px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #000;
+        background-color: #fff;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+        font-family: "Inter", sans-serif;
+        border-radius: 5px;
+      }
+
+      .form-group input:focus {
+        border-color: #4a90e2;
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 15px;
+        background-color: #5dade2;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background-color 0.3s;
+        font-family: "Inter", sans-serif;
+      }
+
+      .login-btn:hover {
+        background-color: #3498db;
+      }
+
+      .back-section {
+        text-align: center;
+        margin: 30px 0 0 0;
+        padding-top: 20px;
+        border-top: 2px solid #ccc;
+      }
+
+      .back-section a {
+        color: #f39c12;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .back-section a:hover {
+        text-decoration: underline;
+      }
+
+      .message {
+        padding: 12px;
+        border-radius: 5px;
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .message.error {
+        background-color: #fee;
+        color: #c33;
+        border: 1px solid #fcc;
+      }
+
+      .message.success {
+        background-color: #efe;
+        color: #3c3;
+        border: 1px solid #cfc;
+      }
+
+      .footer {
+        background-color: #b8b4ac;
+        padding: 12px 20px;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 14px;
+        border-top: 2px solid #a8a49c;
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          flex-direction: column;
+          gap: 15px;
+          padding: 15px 20px;
+        }
+
+        .header-title {
+          font-size: 20px;
+        }
+
+        .login-container {
+          padding: 40px 30px;
+          border-radius: 30px;
+        }
+
+        .welcome-title {
+          font-size: 24px;
+        }
+
+        .logo {
+          width: 80px;
+        }
+
+        .footer {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo-section">
+        <div class="logo">
+          <img src="/static/Edulift.png" alt="EduLift Logo" />
+        </div>
       </div>
-
-      <div>
-        <label for="password">Admin Password:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-          placeholder="Enter admin password"
-        />
+      <div class="header-title">
+        " Your Path to Learning and Career Growth Starts Here! "
       </div>
+    </div>
 
-      <button type="submit" class="btn btn-primary">Login as Admin</button>
-    </form>
+    <div class="main-content">
+      <div class="login-container">
+        <h2 class="welcome-title">
+          <span class="admin-icon">🔐</span>Admin Panel Login
+        </h2>
+        <p class="welcome-subtitle">Secure access for administrators only</p>
 
-    <p style="margin-top: 20px; text-align: center">
-      <a href="/login">← Back to User Login</a>
-    </p>
-  </div>
-</div>
+        <form id="adminLoginForm" method="POST">
+          <div class="form-group">
+            <label for="email">Admin Email</label>
+            <input
+              type="text"
+              id="email"
+              name="email"
+              placeholder="Enter admin email"
+              required
+            />
+          </div>
 
-<style>
-  .auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 20px;
-  }
+          <div class="form-group">
+            <label for="password">Admin Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter admin password"
+              required
+            />
+          </div>
 
-  .form-card {
-    background: white;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 400px;
-  }
+          <button type="submit" class="login-btn">LOGIN AS ADMIN</button>
+          <div id="message" class="message" style="display: none"></div>
 
-  .form-card h2 {
-    margin-bottom: 30px;
-    text-align: center;
-    color: #333;
-  }
+          <div class="back-section">
+            <a href="/">← Back to User Login</a>
+          </div>
+        </form>
+      </div>
+    </div>
 
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
+    <div class="footer">
+      © 2025 EduLift - Career and Learning Support Recommendation
+    </div>
 
-  .form-group div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
+    <script>
+      document
+        .getElementById("adminLoginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const messageDiv = document.getElementById("message");
 
-  .form-group label {
-    font-weight: 600;
-    color: #555;
-  }
+          // Get form data
+          const formData = new FormData(this);
+          const data = {
+            email: formData.get("email"),
+            password: formData.get("password"),
+          };
 
-  .form-group input {
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-  }
+          try {
+            const response = await fetch("/admin/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: new URLSearchParams(data),
+            });
 
-  .form-group input:focus {
-    outline: none;
-    border-color: #667eea;
-  }
+            // Check if response is HTML (Flask template) or JSON
+            const contentType = response.headers.get("content-type");
 
-  .btn {
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
+            if (contentType && contentType.includes("application/json")) {
+              const result = await response.json();
 
-  .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-  }
-
-  .alert {
-    padding: 12px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-  }
-
-  .alert-error {
-    background-color: #fee;
-    color: #c33;
-    border: 1px solid #fcc;
-  }
-</style>
-{% endblock %}
+              if (result.success) {
+                messageDiv.textContent =
+                  "Admin login successful! Redirecting...";
+                messageDiv.className = "message success";
+                messageDiv.style.display = "block";
+                setTimeout(() => {
+                  window.location.href = "/admin/dashboard";
+                }, 1000);
+              } else {
+                messageDiv.textContent = result.message || "Admin login failed";
+                messageDiv.className = "message error";
+                messageDiv.style.display = "block";
+              }
+            } else {
+              // If Flask redirects or returns HTML, follow the redirect
+              if (response.redirected) {
+                window.location.href = response.url;
+              } else {
+                // Check if login was successful by looking at the URL
+                window.location.href = "/admin/dashboard";
+              }
+            }
+          } catch (error) {
+            messageDiv.textContent = "An error occurred. Please try again.";
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
+          }
+        });
+    </script>
+  </body>
+</html>

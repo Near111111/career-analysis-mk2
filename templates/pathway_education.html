@@ -1,102 +1,637 @@
-<!-- templates/pathway_education.html -->
-{% extends "base.html" %} {% block title %}Education Program{% endblock %} {%
-block content %}
-<div class="pathway-container">
-  <h1>📚 Go Back to School</h1>
-  <p class="subtitle">Find the right educational program for you</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PathwayPH - Explore Education Options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-  <form id="educationForm">
-    <div class="form-group">
-      <label for="program_type">Which program interests you?</label>
-      <select id="program_type" required>
-        <option value="">Select...</option>
-        <option value="als">Alternative Learning System (ALS)</option>
-        <option value="shs">Senior High School (SHS)</option>
-        <option value="college">College/University</option>
-      </select>
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background-color: #d4d0c8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background-color: #c8c4bc;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid #a8a49c;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+      }
+
+      .left-section {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo {
+        width: 80px;
+        height: auto;
+      }
+
+      .logo img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .logo-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #4a90e2;
+      }
+
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: #2c3e50;
+        font-size: 16px;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: #4a90e2;
+      }
+
+      .nav-menu a.active {
+        color: #4a90e2;
+        font-weight: 600;
+      }
+
+      .logout-btn {
+        background-color: #e74c3c;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 20px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-family: "Inter", sans-serif;
+      }
+
+      .logout-btn:hover {
+        background-color: #c0392b;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 120px 20px 40px;
+      }
+
+      .pathway-container {
+        background-color: #f5f3ed;
+        border: 3px solid #000;
+        border-radius: 50px;
+        padding: 50px 60px;
+        width: 100%;
+        max-width: 700px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .page-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .page-subtitle {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 40px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #000;
+        background-color: #fff;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+        font-family: "Inter", sans-serif;
+        border-radius: 5px;
+      }
+
+      .form-group select {
+        cursor: pointer;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: #4a90e2;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background-color: #5dade2;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s;
+        font-family: "Inter", sans-serif;
+      }
+
+      .submit-btn:hover {
+        background-color: #3498db;
+      }
+
+      .back-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: transparent;
+        color: #5dade2;
+        border: 2px solid #5dade2;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s;
+        font-family: "Inter", sans-serif;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .back-btn:hover {
+        background-color: #5dade2;
+        color: white;
+      }
+
+      .results-container {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 2px solid #ccc;
+      }
+
+      .result-card {
+        background-color: #fff;
+        border: 2px solid #000;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+      }
+
+      .result-card:hover {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        border-color: #4a90e2;
+      }
+
+      .result-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .result-match {
+        display: inline-block;
+        background-color: #f39c12;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      .result-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      .result-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .meta-item {
+        font-size: 13px;
+      }
+
+      .meta-label {
+        font-weight: 600;
+        color: #7f8c8d;
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .meta-value {
+        color: #2c3e50;
+      }
+
+      .save-btn {
+        padding: 10px 20px;
+        background-color: #f39c12;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-family: "Inter", sans-serif;
+        margin-top: 10px;
+      }
+
+      .save-btn:hover {
+        background-color: #e67e22;
+      }
+
+      .message {
+        padding: 12px;
+        border-radius: 5px;
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .message.error {
+        background-color: #fee;
+        color: #c33;
+        border: 1px solid #fcc;
+      }
+
+      .message.success {
+        background-color: #efe;
+        color: #3c3;
+        border: 1px solid #cfc;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 16px;
+        color: #666;
+      }
+
+      .footer {
+        background-color: #b8b4ac;
+        padding: 12px 20px;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 14px;
+        border-top: 2px solid #a8a49c;
+      }
+
+      @media (max-width: 968px) {
+        .header {
+          padding: 15px 20px;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .left-section {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .nav-menu {
+          gap: 15px;
+          font-size: 14px;
+        }
+
+        .main-content {
+          padding: 200px 20px 40px;
+        }
+
+        .pathway-container {
+          padding: 40px 30px;
+          border-radius: 30px;
+        }
+
+        .page-title {
+          font-size: 26px;
+        }
+
+        .logo {
+          width: 60px;
+        }
+
+        .logo-text {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="left-section">
+        <div class="logo-section">
+          <div class="logo">
+            <img src="/static/Edulift.png" alt="PathwayPH Logo" />
+          </div>
+          <div class="logo-text">PathwayPH</div>
+        </div>
+        <nav class="nav-menu">
+          <a href="/dashboard" class="active">Dashboard</a>
+          <a href="/my_recommendations">My Recommendations</a>
+          <a href="/profile">Profile</a>
+        </nav>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">Logout</button>
     </div>
 
-    <div class="form-group">
-      <label for="modality">Preferred Learning Modality</label>
-      <select id="modality" required>
-        <option value="">Select...</option>
-        <option value="online">Online</option>
-        <option value="modular">Modular/Self-paced</option>
-        <option value="face_to_face">Face-to-face</option>
-        <option value="blended">Blended</option>
-      </select>
+    <div class="main-content">
+      <div class="pathway-container">
+        <h1 class="page-title">📚 Explore Education Options</h1>
+        <p class="page-subtitle">
+          Find the perfect educational program for your goals
+        </p>
+
+        <form id="educationForm">
+          <div class="form-group">
+            <label for="education_level">Current Education Level</label>
+            <select id="education_level" required>
+              <option value="">Select...</option>
+              <option value="high_school">High School</option>
+              <option value="vocational">Vocational/TESDA</option>
+              <option value="associate">Associate Degree</option>
+              <option value="bachelor">Bachelor's Degree</option>
+              <option value="master">Master's Degree</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="program_type">Preferred Program Type</label>
+            <select id="program_type" required>
+              <option value="">Select...</option>
+              <option value="academic">Academic</option>
+              <option value="technical">Technical/Vocational</option>
+              <option value="professional">Professional Certification</option>
+              <option value="online">Online Learning</option>
+              <option value="hybrid">Hybrid/Blended</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="learning_modality">Learning Modality</label>
+            <select id="learning_modality" required>
+              <option value="">Select...</option>
+              <option value="face_to_face">Face-to-Face</option>
+              <option value="online">Online</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="flexible">Flexible Schedule</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="duration">Program Duration Preference</label>
+            <select id="duration" required>
+              <option value="">Select...</option>
+              <option value="short_term">Short-term (3-6 months)</option>
+              <option value="medium_term">Medium-term (6-12 months)</option>
+              <option value="long_term">Long-term (1-4 years)</option>
+              <option value="flexible">Flexible/Self-paced</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            Get Education Recommendations
+          </button>
+          <a href="/dashboard" class="back-btn">Back to Dashboard</a>
+          <div id="message" class="message" style="display: none"></div>
+        </form>
+
+        <div id="results" class="results-container" style="display: none"></div>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="budget">Available Budget for Education</label>
-      <select id="budget" required>
-        <option value="">Select...</option>
-        <option value="free">Free programs only</option>
-        <option value="low">₱1,000 - ₱5,000/month</option>
-        <option value="medium">₱5,000 - ₱15,000/month</option>
-        <option value="high">₱15,000+/month</option>
-      </select>
+    <div class="footer">
+      © 2025 PathwayPH - Career and Learning Support Recommendation
     </div>
 
-    <div class="form-group">
-      <label for="learning_style">Learning Style</label>
-      <select id="learning_style" required>
-        <option value="">Select...</option>
-        <option value="visual">Visual (videos, diagrams)</option>
-        <option value="reading">Reading/Writing</option>
-        <option value="hands_on">Hands-on/Practical</option>
-        <option value="audio">Audio/Listening</option>
-      </select>
-    </div>
+    <script>
+      async function handleLogout() {
+        try {
+          const response = await fetch("/logout", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          window.location.href = "/login";
+        } catch (error) {
+          console.error("Logout error:", error);
+          window.location.href = "/login";
+        }
+      }
 
-    <div class="form-group">
-      <label for="career_goal">Ultimate Career Goal</label>
-      <input
-        type="text"
-        id="career_goal"
-        placeholder="e.g., become a nurse, work in IT"
-        required
-      />
-    </div>
+      // Form submission handler
+      document
+        .getElementById("educationForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const messageDiv = document.getElementById("message");
+          const resultsDiv = document.getElementById("results");
 
-    <div class="form-group">
-      <label for="motivation">What motivates you to continue education?</label>
-      <select id="motivation" required>
-        <option value="">Select...</option>
-        <option value="career_advancement">Career advancement</option>
-        <option value="personal_growth">Personal growth</option>
-        <option value="better_salary">Better salary</option>
-        <option value="family_support">Support my family</option>
-        <option value="passion">Follow my passion</option>
-      </select>
-    </div>
+          const responses = {
+            education_level: document.getElementById("education_level").value,
+            program_type: document.getElementById("program_type").value,
+            learning_modality:
+              document.getElementById("learning_modality").value,
+            duration: document.getElementById("duration").value,
+          };
 
-    <button type="submit" class="btn-primary">
-      Get Education Recommendations
-    </button>
-    <a href="/dashboard" class="btn-secondary">Back to Dashboard</a>
-  </form>
+          // Show loading
+          resultsDiv.innerHTML =
+            '<div class="loading">Loading recommendations...</div>';
+          resultsDiv.style.display = "block";
+          messageDiv.style.display = "none";
 
-  <div id="results" class="results-container" style="display: none"></div>
-</div>
-{% endblock %} {% block scripts %}
-<script src="{{ url_for('static', filename='pathway.js') }}"></script>
-<script>
-  document
-    .getElementById("educationForm")
-    .addEventListener("submit", async (e) => {
-      e.preventDefault();
+          try {
+            const response = await fetch("/pathway/education", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(responses),
+            });
 
-      const responses = {
-        program_type: document.getElementById("program_type").value,
-        modality: document.getElementById("modality").value,
-        budget: document.getElementById("budget").value,
-        learning_style: document.getElementById("learning_style").value,
-        career_goal: document.getElementById("career_goal").value,
-        motivation: document.getElementById("motivation").value,
-      };
+            const data = await response.json();
 
-      await submitPathway("education", responses);
-    });
-</script>
-{% endblock %}
+            if (data.success && data.recommendations) {
+              displayResults(data.recommendations);
+            } else {
+              messageDiv.textContent =
+                data.message || "Failed to get recommendations";
+              messageDiv.className = "message error";
+              messageDiv.style.display = "block";
+              resultsDiv.style.display = "none";
+            }
+          } catch (error) {
+            messageDiv.textContent = "An error occurred: " + error.message;
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
+            resultsDiv.style.display = "none";
+          }
+        });
+
+      function displayResults(recommendations) {
+        const resultsDiv = document.getElementById("results");
+        let html = "";
+
+        recommendations.forEach((rec, index) => {
+          html += `
+            <div class="result-card">
+              <h3 class="result-title">${rec.title}</h3>
+              <span class="result-match">${Math.round(rec.match)}% Match</span>
+              <p class="result-description">${
+                rec.description || "An excellent educational pathway for you."
+              }</p>
+              
+              <div class="result-meta">
+                ${
+                  rec.metadata && rec.metadata.level
+                    ? `
+                  <div class="meta-item">
+                    <span class="meta-label">Program Level</span>
+                    <span class="meta-value">${rec.metadata.level}</span>
+                  </div>
+                `
+                    : ""
+                }
+                ${
+                  rec.metadata && rec.metadata.duration
+                    ? `
+                  <div class="meta-item">
+                    <span class="meta-label">Duration</span>
+                    <span class="meta-value">${rec.metadata.duration}</span>
+                  </div>
+                `
+                    : ""
+                }
+                ${
+                  rec.metadata && rec.metadata.modality
+                    ? `
+                  <div class="meta-item">
+                    <span class="meta-label">Modality</span>
+                    <span class="meta-value">${rec.metadata.modality}</span>
+                  </div>
+                `
+                    : ""
+                }
+              </div>
+              
+              <button class="save-btn" onclick="saveRecommendation('education', ${index})">
+                ⭐ Save Recommendation
+              </button>
+            </div>
+          `;
+        });
+
+        resultsDiv.innerHTML = html;
+        resultsDiv.style.display = "block";
+      }
+
+      async function saveRecommendation(pathway, index) {
+        const resultsDiv = document.getElementById("results");
+        const cards = resultsDiv.querySelectorAll(".result-card");
+        const card = cards[index];
+
+        const title = card.querySelector(".result-title").textContent;
+        const matchText = card.querySelector(".result-match").textContent;
+        const match = parseFloat(matchText);
+
+        const metadata = {};
+        const metaItems = card.querySelectorAll(".meta-item");
+        metaItems.forEach((item) => {
+          const label = item
+            .querySelector(".meta-label")
+            .textContent.toLowerCase()
+            .replace(" ", "_");
+          const value = item.querySelector(".meta-value").textContent;
+          metadata[label] = value;
+        });
+
+        try {
+          const response = await fetch("/save_recommendation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              pathway_type: pathway,
+              recommendation: {
+                title: title,
+                match: match,
+                metadata: metadata,
+              },
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            alert("Recommendation saved successfully!");
+          } else {
+            alert("Failed to save recommendation: " + (data.message || ""));
+          }
+        } catch (error) {
+          alert("Error saving recommendation: " + error.message);
+        }
+      }
+    </script>
+  </body>
+</html>

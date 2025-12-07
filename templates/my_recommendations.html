@@ -1,132 +1,567 @@
-<!-- templates/my_recommendations.html -->
-{% extends "base.html" %} {% block title %}My Saved Recommendations{% endblock
-%} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PathwayPH - My Recommendations</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-<div class="recommendations-container">
-  <div class="recommendations-header">
-    <div>
-      <h1>📋 My Saved Recommendations</h1>
-      <p class="header-subtitle">Track your career and education pathways</p>
-    </div>
-    <a href="/dashboard" class="btn-secondary">← Back to Dashboard</a>
-  </div>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #d4d0c8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-  {% if recommendations %}
-  <div class="saved-recommendations">
-    {% for rec in recommendations %}
-    <div class="recommendation-card" data-index="{{ loop.index }}">
-      <div class="card-header">
-        <div class="pathway-badge pathway-{{ rec[2]|lower }}">{{ rec[2] }}</div>
-        <div class="card-meta">
-          <h3 id="title-{{ loop.index }}">Loading...</h3>
-          <p class="saved-date">💾 Saved {{ rec[5] }}</p>
-        </div>
-      </div>
+      .header {
+        background-color: #c8c4bc;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid #a8a49c;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+      }
 
-      <div class="card-content">
-        <div class="recommendation-details">
-          <div class="detail-item">
-            <span class="detail-label">Match Score</span>
-            <div class="match-bar">
-              <div
-                class="match-fill"
-                id="fill-{{ loop.index }}"
-                style="width: 0%"
-              ></div>
-            </div>
+      .left-section {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo {
+        width: 80px;
+        height: auto;
+      }
+
+      .logo img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .logo-text {
+        font-size: 24px;
+        font-weight: bold;
+        color: #4a90e2;
+      }
+
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: #2c3e50;
+        font-size: 16px;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: #4a90e2;
+      }
+
+      .nav-menu a.active {
+        color: #4a90e2;
+        font-weight: 600;
+      }
+
+      .logout-btn {
+        background-color: #e74c3c;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 20px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .logout-btn:hover {
+        background-color: #c0392b;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 120px 20px 40px;
+      }
+
+      .recommendations-container {
+        background-color: #f5f3ed;
+        border: 3px solid #000;
+        border-radius: 50px;
+        padding: 50px 60px;
+        width: 100%;
+        max-width: 1000px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        font-size: 32px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .page-subtitle {
+        font-size: 16px;
+        color: #555;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+      }
+
+      .empty-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+      }
+
+      .empty-state h2 {
+        font-size: 28px;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .empty-state p {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+
+      .btn-primary {
+        display: inline-block;
+        padding: 15px 40px;
+        background-color: #5dade2;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background-color 0.3s;
+      }
+
+      .btn-primary:hover {
+        background-color: #3498db;
+      }
+
+      .saved-recommendations {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .recommendation-card {
+        background-color: #fff;
+        border: 2px solid #000;
+        border-radius: 20px;
+        padding: 30px;
+        transition: all 0.3s;
+      }
+
+      .recommendation-card:hover {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        border-color: #4a90e2;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .pathway-badge {
+        padding: 6px 15px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .pathway-career {
+        background-color: #e8f4f8;
+        color: #2980b9;
+      }
+
+      .pathway-education {
+        background-color: #fef5e7;
+        color: #d68910;
+      }
+
+      .pathway-tesda {
+        background-color: #ebf5fb;
+        color: #5499c7;
+      }
+
+      .card-meta h3 {
+        font-size: 20px;
+        color: #2c3e50;
+        margin-bottom: 5px;
+      }
+
+      .saved-date {
+        font-size: 14px;
+        color: #7f8c8d;
+      }
+
+      .card-content {
+        margin-bottom: 20px;
+      }
+
+      .detail-item {
+        margin-bottom: 15px;
+      }
+
+      .detail-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+      }
+
+      .match-bar {
+        width: 100%;
+        height: 25px;
+        background-color: #ecf0f1;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #bdc3c7;
+      }
+
+      .match-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #5dade2, #3498db);
+        transition: width 1s ease;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10px;
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .metadata-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .metadata-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .metadata-item strong {
+        font-size: 13px;
+        color: #7f8c8d;
+      }
+
+      .metadata-item span {
+        font-size: 14px;
+        color: #2c3e50;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 15px;
+        padding-top: 20px;
+        border-top: 2px solid #ecf0f1;
+      }
+
+      .btn-small {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .btn-view {
+        background-color: #f39c12;
+        color: white;
+      }
+
+      .btn-view:hover {
+        background-color: #e67e22;
+      }
+
+      .btn-remove {
+        background-color: #e74c3c;
+        color: white;
+      }
+
+      .btn-remove:hover {
+        background-color: #c0392b;
+      }
+
+      .footer {
+        background-color: #b8b4ac;
+        padding: 12px 20px;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 14px;
+        border-top: 2px solid #a8a49c;
+      }
+
+      @media (max-width: 968px) {
+        .header {
+          padding: 15px 20px;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .left-section {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .nav-menu {
+          gap: 15px;
+          font-size: 14px;
+        }
+
+        .main-content {
+          padding: 200px 20px 40px;
+        }
+
+        .recommendations-container {
+          padding: 40px 30px;
+          border-radius: 30px;
+        }
+
+        .page-title {
+          font-size: 26px;
+        }
+
+        .logo {
+          width: 60px;
+        }
+
+        .logo-text {
+          font-size: 20px;
+        }
+
+        .card-actions {
+          flex-direction: column;
+        }
+
+        .btn-small {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="left-section">
+        <div class="logo-section">
+          <div class="logo">
+            <img src="/static/Edulift.png" alt="PathwayPH Logo" />
           </div>
-          <div class="metadata-display" id="metadata-{{ loop.index }}"></div>
+          <div class="logo-text">PathwayPH</div>
         </div>
+        <nav class="nav-menu">
+          <a href="/dashboard">Dashboard</a>
+          <a href="/my_recommendations" class="active">My Recommendations</a>
+          <a href="/profile">Profile</a>
+        </nav>
       </div>
-
-      <div class="card-actions">
-        <button
-          class="btn-small btn-view"
-          onclick="alert('Saved & Bookmarked')"
-        >
-          ⭐ Saved
-        </button>
-        <button
-          class="btn-small btn-remove"
-          onclick="if(confirm('Remove this recommendation?')) { window.location.href='/remove_recommendation?id={{ rec[0] }}'; }"
-        >
-          🗑️ Remove
-        </button>
-      </div>
-
-      <script>
-        (function () {
-          // Parse recommendation data
-          const recStr = `{{ rec[3] }}`.trim();
-          let rec = {};
-
-          try {
-            // Handle escaped HTML entities first
-            const decoded = recStr
-              .replace(/&quot;/g, '"')
-              .replace(/&#39;/g, "'")
-              .replace(/&amp;/g, "&");
-
-            // Convert Python dict to JSON
-            const jsonStr = decoded
-              .replace(/'/g, '"')
-              .replace(/True/g, "true")
-              .replace(/False/g, "false")
-              .replace(/None/g, "null");
-
-            rec = JSON.parse(jsonStr);
-          } catch (e) {
-            console.error("Parse error:", e, "Input:", recStr);
-            rec = { title: "Error parsing", match: 0, metadata: {} };
-          }
-
-          // Set title
-          const titleEl = document.getElementById("title-{{ loop.index }}");
-          if (rec.title) {
-            titleEl.textContent = rec.title;
-          }
-
-          // Set match score bar
-          const match = rec.match || 0;
-          const fillEl = document.getElementById("fill-{{ loop.index }}");
-          fillEl.style.width = Math.min(match, 100) + "%";
-
-          // Set metadata
-          const metadata = rec.metadata || {};
-          const metadataEl = document.getElementById(
-            "metadata-{{ loop.index }}"
-          );
-
-          if (Object.keys(metadata).length > 0) {
-            let html = '<div class="metadata-grid">';
-            for (const [key, value] of Object.entries(metadata)) {
-              if (value) {
-                const label = key
-                  .replace(/_/g, " ")
-                  .split(" ")
-                  .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                  .join(" ");
-                html += `<div class="metadata-item"><strong>${label}</strong><span>${value}</span></div>`;
-              }
-            }
-            html += "</div>";
-            metadataEl.innerHTML = html;
-          }
-        })();
-      </script>
+      <button class="logout-btn" onclick="handleLogout()">Logout</button>
     </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="empty-state">
-    <div class="empty-icon">✨</div>
-    <h2>No Recommendations Yet</h2>
-    <p>
-      Start exploring career, education, and TESDA pathways to save your
-      recommendations.
-    </p>
-    <a href="/dashboard" class="btn-primary btn-large">Explore Pathways Now</a>
-  </div>
-  {% endif %}
-</div>
-{% endblock %}
+
+    <div class="main-content">
+      <div class="recommendations-container">
+        <div class="page-header">
+          <h1 class="page-title">📋 My Saved Recommendations</h1>
+          <p class="page-subtitle">Track your career and education pathways</p>
+        </div>
+
+        <!-- If no recommendations -->
+        {% if not recommendations %}
+        <div class="empty-state">
+          <div class="empty-icon">✨</div>
+          <h2>No Recommendations Yet</h2>
+          <p>
+            Start exploring career, education, and TESDA pathways to save your
+            recommendations.
+          </p>
+          <a href="/dashboard" class="btn-primary">Explore Pathways Now</a>
+        </div>
+        {% else %}
+        <!-- If there are recommendations -->
+        <div class="saved-recommendations">
+          {% for rec in recommendations %}
+          <div class="recommendation-card" data-index="{{ loop.index }}">
+            <div class="card-header">
+              <div class="pathway-badge pathway-{{ rec[2]|lower }}">
+                {{ rec[2] }}
+              </div>
+              <div class="card-meta">
+                <h3 id="title-{{ loop.index }}">Loading...</h3>
+                <p class="saved-date">💾 Saved {{ rec[5] }}</p>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <div class="recommendation-details">
+                <div class="detail-item">
+                  <span class="detail-label">Match Score</span>
+                  <div class="match-bar">
+                    <div
+                      class="match-fill"
+                      id="fill-{{ loop.index }}"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+                <div
+                  class="metadata-display"
+                  id="metadata-{{ loop.index }}"
+                ></div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button
+                class="btn-small btn-view"
+                onclick="alert('This recommendation is saved!')"
+              >
+                ⭐ Saved
+              </button>
+              <button
+                class="btn-small btn-remove"
+                onclick="if(confirm('Remove this recommendation?')) { window.location.href='/remove_recommendation?id={{ rec[0] }}'; }"
+              >
+                🗑️ Remove
+              </button>
+            </div>
+
+            <script>
+              (function () {
+                // Parse recommendation data
+                const recStr = `{{ rec[3] }}`.trim();
+                let rec = {};
+
+                try {
+                  // Handle escaped HTML entities first
+                  const decoded = recStr
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'")
+                    .replace(/&amp;/g, "&");
+
+                  // Convert Python dict to JSON
+                  const jsonStr = decoded
+                    .replace(/'/g, '"')
+                    .replace(/True/g, "true")
+                    .replace(/False/g, "false")
+                    .replace(/None/g, "null");
+
+                  rec = JSON.parse(jsonStr);
+                } catch (e) {
+                  console.error("Parse error:", e, "Input:", recStr);
+                  rec = { title: "Error parsing", match: 0, metadata: {} };
+                }
+
+                // Set title
+                const titleEl = document.getElementById(
+                  "title-{{ loop.index }}"
+                );
+                if (rec.title) {
+                  titleEl.textContent = rec.title;
+                }
+
+                // Set match score bar
+                const match = rec.match || 0;
+                const fillEl = document.getElementById("fill-{{ loop.index }}");
+                setTimeout(() => {
+                  fillEl.style.width = Math.min(match, 100) + "%";
+                  fillEl.textContent = Math.round(match) + "%";
+                }, 100);
+
+                // Set metadata
+                const metadata = rec.metadata || {};
+                const metadataEl = document.getElementById(
+                  "metadata-{{ loop.index }}"
+                );
+
+                if (Object.keys(metadata).length > 0) {
+                  let html = '<div class="metadata-grid">';
+                  for (const [key, value] of Object.entries(metadata)) {
+                    if (value) {
+                      const label = key
+                        .replace(/_/g, " ")
+                        .split(" ")
+                        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                        .join(" ");
+                      html += `<div class="metadata-item"><strong>${label}</strong><span>${value}</span></div>`;
+                    }
+                  }
+                  html += "</div>";
+                  metadataEl.innerHTML = html;
+                }
+              })();
+            </script>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2025 PathwayPH - Career and Learning Support Recommendation
+    </div>
+
+    <script>
+      async function handleLogout() {
+        try {
+          const response = await fetch("/logout", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          window.location.href = "/login";
+        } catch (error) {
+          console.error("Logout error:", error);
+          window.location.href = "/login";
+        }
+      }
+    </script>
+  </body>
+</html>

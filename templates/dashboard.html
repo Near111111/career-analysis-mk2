@@ -1,35 +1,345 @@
-<!-- templates/dashboard.html -->
-{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
-content %}
-<div class="dashboard-container">
-  <h1>Choose Your Pathway</h1>
-  <p class="subtitle">Select an option to get personalized recommendations</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PathwayPH - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-  <div class="pathway-grid">
-    <a href="/pathway/career" class="pathway-card">
-      <div class="pathway-icon">💼</div>
-      <h2>Explore Career Options</h2>
-      <p>Discover career paths that match your skills and interests</p>
-    </a>
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background-color: #d4d0c8;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-    <a href="/pathway/education" class="pathway-card">
-      <div class="pathway-icon">📚</div>
-      <h2>Go Back to School</h2>
-      <p>Find the right educational program (ALS, SHS, College)</p>
-    </a>
+      .header {
+        background-color: #c8c4bc;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid #a8a49c;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+      }
 
-    <a href="/pathway/tesda" class="pathway-card">
-      <div class="pathway-icon">🔧</div>
-      <h2>TESDA / Skills Training</h2>
-      <p>Get technical-vocational training and certification</p>
-    </a>
-  </div>
+      .left-section {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+      }
 
-  <div class="quick-links">
-    <a href="/my_recommendations" class="btn-secondary"
-      >View Saved Recommendations</a
-    >
-    <a href="/profile" class="btn-secondary">Update Profile</a>
-  </div>
-</div>
-{% endblock %}
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo {
+        width: 80px;
+        height: auto;
+      }
+
+      .logo img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .logo-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #4a90e2;
+      }
+
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: #2c3e50;
+        font-size: 16px;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: #4a90e2;
+      }
+
+      .nav-menu a.active {
+        color: #4a90e2;
+        font-weight: 600;
+      }
+
+      .logout-btn {
+        background-color: #e74c3c;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 20px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-family: "Inter", sans-serif;
+      }
+
+      .logout-btn:hover {
+        background-color: #c0392b;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 120px 20px 40px;
+      }
+
+      .dashboard-container {
+        background-color: #f5f3ed;
+        border: 3px solid #000;
+        border-radius: 50px;
+        padding: 50px 60px;
+        width: 100%;
+        max-width: 1000px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .dashboard-subtitle {
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 50px;
+      }
+
+      .pathway-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .pathway-card {
+        background-color: #fff;
+        border: 2px solid #000;
+        border-radius: 20px;
+        padding: 30px 25px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .pathway-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        border-color: #4a90e2;
+      }
+
+      .pathway-icon {
+        font-size: 50px;
+        margin-bottom: 20px;
+      }
+
+      .pathway-card h2 {
+        font-size: 20px;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+
+      .pathway-card p {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .quick-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding-top: 30px;
+        border-top: 2px solid #ccc;
+        flex-wrap: wrap;
+      }
+
+      .quick-links a {
+        padding: 12px 30px;
+        background-color: #5dade2;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background-color 0.3s;
+      }
+
+      .quick-links a:hover {
+        background-color: #3498db;
+      }
+
+      .footer {
+        background-color: #b8b4ac;
+        padding: 12px 20px;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 14px;
+        border-top: 2px solid #a8a49c;
+      }
+
+      @media (max-width: 968px) {
+        .header {
+          padding: 15px 20px;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .left-section {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .nav-menu {
+          gap: 15px;
+          font-size: 14px;
+        }
+
+        .main-content {
+          padding: 200px 20px 40px;
+        }
+
+        .dashboard-container {
+          padding: 40px 30px;
+          border-radius: 30px;
+        }
+
+        .dashboard-title {
+          font-size: 26px;
+        }
+
+        .pathway-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .quick-links {
+          flex-direction: column;
+        }
+
+        .quick-links a {
+          width: 100%;
+        }
+
+        .logo {
+          width: 60px;
+        }
+
+        .logo-text {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="left-section">
+        <div class="logo-section">
+          <div class="logo">
+            <img src="/static/Edulift.png" alt="EduLift Logo" />
+          </div>
+          <div class="logo-text">EduLift</div>
+        </div>
+        <nav class="nav-menu">
+          <a href="/dashboard" class="active">Dashboard</a>
+          <a href="/my_recommendations">My Recommendations</a>
+          <a href="/profile">Profile</a>
+        </nav>
+      </div>
+      <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </div>
+
+    <div class="main-content">
+      <div class="dashboard-container">
+        <h1 class="dashboard-title">Choose Your Pathway</h1>
+        <p class="dashboard-subtitle">
+          Select an option to get personalized recommendations
+        </p>
+
+        <div class="pathway-grid">
+          <a href="/pathway/career" class="pathway-card">
+            <div class="pathway-icon">💼</div>
+            <h2>Explore Career Options</h2>
+            <p>Discover career paths that match your skills and interests</p>
+          </a>
+
+          <a href="/pathway/education" class="pathway-card">
+            <div class="pathway-icon">📚</div>
+            <h2>Go Back to School</h2>
+            <p>Find the right educational program (ALS, SHS, College)</p>
+          </a>
+
+          <a href="/pathway/tesda" class="pathway-card">
+            <div class="pathway-icon">🔧</div>
+            <h2>TESDA / Skills Training</h2>
+            <p>Get technical-vocational training and certification</p>
+          </a>
+        </div>
+
+        <div class="quick-links">
+          <a href="/my_recommendations">View Saved Recommendations</a>
+          <a href="/profile">Update Profile</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2025 EduLift - Career and Learning Support Recommendation
+    </div>
+
+    <script>
+      async function handleLogout() {
+        try {
+          const response = await fetch("/logout", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          window.location.href = "/login";
+        } catch (error) {
+          console.error("Logout error:", error);
+          window.location.href = "/login";
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -117,8 +117,13 @@ def register():
     
     return render_template('register.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        if 'user_id' in session:
+            return redirect(url_for('dashboard'))
+        return render_template('login.html')
+    
     data = request.json
     username = data.get('username')
     password = data.get('password')
@@ -137,9 +142,11 @@ def login():
     
     return jsonify({'success': False, 'message': 'Invalid credentials'})
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': True})
     return redirect(url_for('index'))
 
 @app.route('/dashboard')
@@ -522,7 +529,7 @@ def admin_required(f):
     def decorated_function(*args, **kwargs):
         if not session.get('admin_logged_in'):
             # For AJAX requests, return JSON
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.accept_mimetypes.get('application/json'):
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return jsonify({'success': False, 'message': 'Unauthorized'}), 401
             return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
@@ -544,10 +551,12 @@ def admin_login():
     
     return render_template('admin_login.html')
 
-@app.route('/admin/logout')
+@app.route('/admin/logout', methods=['GET', 'POST'])
 def admin_logout():
     session.pop('admin_logged_in', None)
     session.pop('admin_email', None)
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': True})
     return redirect(url_for('index'))
 
 @app.route('/admin/dashboard')

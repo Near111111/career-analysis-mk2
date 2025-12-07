@@ -69,8 +69,6 @@ block content %}
               <th>Email</th>
               <th>Name</th>
               <th>Joined</th>
-              <th>Last Login</th>
-              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -88,12 +86,6 @@ block content %}
               </td>
               <td class="date-cell">
                 <span class="text-small">{{ user.created_at or 'N/A' }}</span>
-              </td>
-              <td class="date-cell">
-                <span class="text-small">{{ user.last_login or 'Never' }}</span>
-              </td>
-              <td class="status-cell">
-                <span class="status-badge active">Active</span>
               </td>
               <td class="actions-cell">
                 <button
