@@ -8,6 +8,9 @@ from datetime import timedelta
 from ml_model import MLModel
 import joblib
 import pandas as pd
+import ast
+import json
+import re
 
 
 # Try to load ML models, if they don't exist, show setup message
@@ -196,113 +199,269 @@ def pathway(path_type):
 
 @app.route('/submit_pathway', methods=['POST'])
 def submit_pathway():
-    if 'user_id' not in session:
-        return jsonify({'success': False, 'message': 'Not authenticated'})
-    
-    # Check if models are ready
-    if not models_ready or ml_model is None:
-        return jsonify({
-            'success': False, 
-            'message': 'ML models are still being trained. Please try again in a few moments.',
-            'redirect': '/dashboard'
-        })
+    try:
+        if 'user_id' not in session:
+            return jsonify({'success': False, 'message': 'Not authenticated'})
+        
+        # Check if models are ready
+        if not models_ready or ml_model is None:
+            return jsonify({
+                'success': False, 
+                'message': 'ML models are still being trained. Please try again in a few moments.',
+                'redirect': '/dashboard'
+            })
 
-    data = request.json
-    pathway = data.get('pathway')
-    responses = data.get('responses') or {}
+        if not request.is_json:
+            return jsonify({'success': False, 'message': 'Request must be JSON'})
+            
+        data = request.json
+        if not data:
+            return jsonify({'success': False, 'message': 'No data provided'})
+            
+        pathway = data.get('pathway')
+        responses = data.get('responses') or {}
 
-    # Map frontend field names to model feature columns (must match feature_cols used in training)
-    # We'll build a mapping function per pathway:
-    def map_inputs(pathway, responses):
-        if pathway == 'career':
-            # Map user input to valid training values
-            skills_mapping = {
-                'communication': 'communication',
-                'problem-solving': 'problem-solving',
-                'problem solving': 'problem-solving',
-                'technical': 'technical',
-                'hands-on': 'hands-on',
-                'hands on': 'hands-on',
-                'service': 'service',
-                'creative': 'creative',
-                'ui/ux': 'creative',
-                'design': 'creative',
-                'art': 'creative'
-            }
-            
-            user_skills = responses.get("primary_skills","").lower()
-            # Find the best matching skill from training data
-            mapped_skill = skills_mapping.get(user_skills, 'communication')
-            # If not found, try to find a partial match
-            if mapped_skill == 'communication':
-                for key in skills_mapping:
-                    if key in user_skills or user_skills in key:
-                        mapped_skill = skills_mapping[key]
-                        break
-            
-            return {
-                "primary_skills": mapped_skill,
-                "industry": responses.get("industry",""),
-                "salary": responses.get("salary",""),
-                "work_environment": responses.get("work_environment","")
-            }
-        if pathway == 'education':
-            return {
-                "modality": responses.get("modality",""),
-                "budget": responses.get("budget",""),
-                "learning_style": responses.get("learning_style",""),
-                "motivation": responses.get("motivation","")
-            }
+        # Map frontend field names to model feature columns (must match feature_cols used in training)
+        # We'll build a mapping function per pathway:
+        def map_inputs(pathway, responses):
+            if pathway == 'career':
+                # Map user input to valid training values
+                # Skills mapping - map form values to dataset values
+                skills_mapping = {
+                    'communication': 'communication',
+                    'problem-solving': 'problem-solving',
+                    'problem solving': 'problem-solving',
+                    'technical': 'technical',
+                    'leadership': 'leadership',  # Leadership exists in dataset
+                    'creativity': 'creativity',  # Creativity exists in dataset
+                    'analytical': 'problem-solving',
+                    'organization': 'communication',
+                    'teamwork': 'communication',
+                    'customer service': 'service',
+                    'sales': 'service',
+                    'hands-on': 'hands-on',
+                    'hands on': 'hands-on',
+                    'service': 'service',
+                    'creative': 'creativity',
+                    'ui/ux': 'design',
+                    'design': 'design',
+                    'art': 'creativity'
+                }
+                
+                user_skills = responses.get("primary_skills","").lower().strip()
+                # Find the best matching skill from training data
+                mapped_skill = skills_mapping.get(user_skills, 'communication')
+                # If not found, try to find a partial match
+                if mapped_skill == 'communication' and user_skills not in skills_mapping:
+                    for key in skills_mapping:
+                        if key in user_skills or user_skills in key:
+                            mapped_skill = skills_mapping[key]
+                            break
+                
+                # Industry mapping - form values to dataset values
+                industry_mapping = {
+                    'tech': 'tech',
+                    'technology/it': 'tech',
+                    'business': 'business',
+                    'business/sales': 'business',
+                    'health': 'health',
+                    'healthcare': 'health',
+                    'education': 'education',
+                    'creative': 'creative',
+                    'creative/arts': 'creative',
+                    'service': 'service',
+                    'service industry': 'service',
+                    'trade': 'trade',
+                    'skilled trades': 'trade',
+                    'government': 'business',  # Map to closest match
+                    'finance': 'business',
+                    'finance/banking': 'business'
+                }
+                industry = responses.get("industry","").lower().strip()
+                mapped_industry = industry_mapping.get(industry, industry if industry in ['tech', 'business', 'health', 'education', 'creative', 'service', 'trade'] else 'tech')
+                
+                # Salary mapping - form values to dataset format
+                salary_mapping = {
+                    '15k-25k': '60k-80k',  # Map to entry-level range
+                    '25k-40k': '65k-85k',
+                    '40k-60k': '70k-90k',
+                    '60k+': '80k-120k',
+                    '30k-50k': '60k-80k',
+                    '50k-70k': '70k-90k',
+                    '70k-90k': '70k-90k',
+                    '80k+': '80k-120k'
+                }
+                salary = responses.get("salary","").lower().strip()
+                # Check if it's already a valid dataset value
+                valid_salaries = ['60k-80k', '65k-85k', '70k-90k', '75k-95k', '80k-110k', '80k-120k', '90k-130k']
+                mapped_salary = salary_mapping.get(salary, salary if salary in valid_salaries else '60k-80k')
+                
+                # Work environment mapping
+                environment_mapping = {
+                    'office': 'office',
+                    'office-based': 'office',
+                    'remote': 'remote',
+                    'remote/work from home': 'remote',
+                    'field': 'field',
+                    'field work': 'field',
+                    'hybrid': 'hybrid',
+                    'outdoor': 'outdoor'
+                }
+                work_env = responses.get("work_environment","").lower().strip()
+                mapped_env = environment_mapping.get(work_env, work_env if work_env in ['office', 'remote', 'hybrid', 'field', 'outdoor'] else 'office')
+                
+                return {
+                    "primary_skills": mapped_skill,
+                    "industry": mapped_industry,
+                    "salary": mapped_salary,
+                    "work_environment": mapped_env
+                }
+            if pathway == 'education':
+                # Modality mapping
+                modality_mapping = {
+                    'face_to_face': 'full_time',
+                    'face-to-face': 'full_time',
+                    'online': 'online',
+                    'hybrid': 'hybrid',
+                    'flexible': 'flexible',
+                    'flexible schedule': 'flexible'
+                }
+                modality = responses.get("modality","").lower().strip()
+                mapped_modality = modality_mapping.get(modality, modality if modality in ['full_time', 'online', 'hybrid', 'flexible'] else 'full_time')
+                
+                # Budget mapping - duration to budget
+                budget_mapping = {
+                    'short_term': 'low',
+                    'short-term': 'low',
+                    'medium_term': 'medium',
+                    'medium-term': 'medium',
+                    'long_term': 'high',
+                    'long-term': 'high',
+                    'flexible': 'medium',
+                    'flexible/self-paced': 'medium'
+                }
+                duration = responses.get("budget","").lower().strip()
+                mapped_budget = budget_mapping.get(duration, duration if duration in ['low', 'medium', 'high'] else 'medium')
+                
+                # Learning style - default to kinesthetic if not provided
+                learning_style = responses.get("learning_style","").lower().strip()
+                mapped_learning_style = learning_style if learning_style in ['kinesthetic', 'visual', 'auditory', 'reading'] else 'kinesthetic'
+                
+                # Motivation - default to career-focused
+                motivation = responses.get("motivation","").lower().strip()
+                mapped_motivation = motivation if motivation in ['career-focused', 'personal-growth', 'academic'] else 'career-focused'
+                
+                return {
+                    "modality": mapped_modality,
+                    "budget": mapped_budget,
+                    "learning_style": mapped_learning_style,
+                    "motivation": mapped_motivation
+                }
+            if pathway == 'tesda':
+                # Budget mapping - training duration to budget
+                budget_mapping = {
+                    'short': 'free',
+                    'short-term': 'free',
+                    'medium': 'paid',  # TESDA uses 'paid' not 'low'
+                    'medium-term': 'paid',
+                    'long': 'paid',
+                    'long-term': 'paid',
+                    'flexible': 'free',
+                    'flexible/self-paced': 'free'
+                }
+                duration = responses.get("budget","").lower().strip()
+                mapped_budget = budget_mapping.get(duration, duration if duration in ['free', 'paid'] else 'free')
+                
+                # Time available mapping - schedule to time_available
+                time_mapping = {
+                    'full_time': 'full_time',
+                    'full-time': 'full_time',
+                    'weekdays': 'full_time',
+                    'weekends': 'part_time',
+                    'weekends only': 'part_time',
+                    'evenings': 'part_time',
+                    'flexible': 'flexible',
+                    'flexible schedule': 'flexible'
+                }
+                schedule = responses.get("time_available","").lower().strip()
+                mapped_time = time_mapping.get(schedule, schedule if schedule in ['full_time', 'part_time', 'flexible'] else 'part_time')
+                
+                # Location - default to manila if not provided
+                location = responses.get("location","").lower().strip()
+                location_mapping = {
+                    'manila': 'manila',
+                    'makati': 'makati',
+                    'quezon city': 'quezon_city',
+                    'quezon_city': 'quezon_city',
+                    'pasig': 'manila',  # Map to closest
+                    'taguig': 'makati',
+                    'mandaluyong': 'makati'
+                }
+                mapped_location = location_mapping.get(location, location if location in ['manila', 'makati', 'quezon_city'] else 'manila')
+                
+                # Experience mapping
+                experience_mapping = {
+                    'none': 'beginner',
+                    'no experience': 'beginner',
+                    'basic': 'beginner',
+                    'basic knowledge': 'beginner',
+                    'intermediate': 'intermediate',
+                    'some experience': 'intermediate',
+                    'advanced': 'advanced',
+                    'highly experienced': 'advanced'
+                }
+                experience = responses.get("experience","").lower().strip()
+                mapped_experience = experience_mapping.get(experience, experience if experience in ['beginner', 'intermediate', 'advanced'] else 'beginner')
+                
+                return {
+                    "budget": mapped_budget,
+                    "time_available": mapped_time,
+                    "location": mapped_location,
+                    "experience": mapped_experience
+                }
+            return {}
+
+        features = map_inputs(pathway, responses)
+        
+        # Get more recommendations for filtering (will be filtered down to 5)
         if pathway == 'tesda':
-            return {
-                "budget": responses.get("budget",""),
-                "time_available": responses.get("time_available",""),
-                "location": responses.get("location",""),
-                "experience": responses.get("experience","")
-            }
-        return {}
+            recommendations = ml_model.predict_top_k(pathway, features, k=20)
+        else:
+            recommendations = ml_model.predict_top_k(pathway, features, k=5)
 
-    features = map_inputs(pathway, responses)
-    
-    # Get more recommendations for filtering (will be filtered down to 5)
-    if pathway == 'tesda':
-        recommendations = ml_model.predict_top_k(pathway, features, k=20)
-    else:
-        recommendations = ml_model.predict_top_k(pathway, features, k=5)
-
-    # Filter education recommendations by program type
-    if pathway == 'education':
-        program_type = responses.get('program_type', '').lower()
-        filtered_recommendations = []
-        
-        # Define program categories
-        shs_programs = ['stem track', 'ict track', 'abm track', 'humss track', 'tvl - automotive', 'tvl - ict']
-        college_programs = ['bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch', 'bscriminology', 'bsagri', 'diploma - welding']
-        als_programs = ['als program']  # Add ALS-specific programs if available
-        
-        for rec in recommendations:
-            title = rec['title'].lower()
+        # Filter education recommendations by program type
+        if pathway == 'education':
+            program_type = responses.get('program_type', '').lower()
+            filtered_recommendations = []
             
-            # Filter based on program type selection
-            if program_type == 'shs' and any(prog in title for prog in shs_programs):
-                filtered_recommendations.append(rec)
-            elif program_type == 'college' and any(prog in title for prog in college_programs):
-                filtered_recommendations.append(rec)
-            elif program_type == 'als' and any(prog in title for prog in als_programs):
-                filtered_recommendations.append(rec)
-        
-        # If not enough filtered results, include what we have (limit to 5)
-        if len(filtered_recommendations) == 0:
-            filtered_recommendations = recommendations[:5]
-        
-        recommendations = filtered_recommendations[:5]
+            # Define program categories
+            shs_programs = ['stem track', 'ict track', 'abm track', 'humss track', 'tvl - automotive', 'tvl - ict']
+            college_programs = ['bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch', 'bscriminology', 'bsagri', 'diploma - welding']
+            als_programs = ['als program']  # Add ALS-specific programs if available
+            
+            for rec in recommendations:
+                title = rec['title'].lower()
+                
+                # Filter based on program type selection
+                if program_type == 'shs' and any(prog in title for prog in shs_programs):
+                    filtered_recommendations.append(rec)
+                elif program_type == 'college' and any(prog in title for prog in college_programs):
+                    filtered_recommendations.append(rec)
+                elif program_type == 'als' and any(prog in title for prog in als_programs):
+                    filtered_recommendations.append(rec)
+            
+            # If not enough filtered results, include what we have (limit to 5)
+            if len(filtered_recommendations) == 0:
+                filtered_recommendations = recommendations[:5]
+            
+            recommendations = filtered_recommendations[:5]
 
-    # Filter career recommendations by industry
-    if pathway == 'career':
-        industry = responses.get('industry', '').lower()
-        
-        # Define career categories with better keyword matching
-        industry_keywords = {
+        # Filter career recommendations by industry
+        if pathway == 'career':
+            industry = responses.get('industry', '').lower()
+            
+            # Define career categories with better keyword matching
+            industry_keywords = {
             'tech': {
                 'primary': ['developer', 'engineer', 'programmer', 'qa', 'software', 'analyst', 'devops', 'seo', 'data scientist'],
                 'secondary': ['technician', 'tech', 'it', 'support']
@@ -331,55 +490,55 @@ def submit_pathway():
                 'primary': ['plumber', 'electrician', 'welder', 'carpenter', 'mechanic', 'automotive'],
                 'secondary': ['technician', 'construction', 'installation']
             }
-        }
-        
-        # Scoring function for recommendations
-        def score_recommendation(title, keywords_dict):
-            title_lower = title.lower()
-            score = 0
+            }
             
-            # Primary keywords worth more points
-            for keyword in keywords_dict.get('primary', []):
-                if keyword in title_lower:
-                    score += 10
-                    
-            # Secondary keywords worth fewer points
-            for keyword in keywords_dict.get('secondary', []):
-                if keyword in title_lower:
-                    score += 3
-                    
-            return score
-        
-        if industry in industry_keywords:
-            keywords_dict = industry_keywords[industry]
-            scored_recs = []
-            
-            # Score all recommendations
-            for rec in recommendations:
-                score = score_recommendation(rec['title'], keywords_dict)
-                scored_recs.append((rec, score))
-            
-            # Sort by score (descending), then by original match percentage
-            scored_recs.sort(key=lambda x: (-x[1], -x[0]['match']))
-            
-            # Get top recommendations with scores > 0 (matched at least one keyword)
-            filtered_recommendations = [rec for rec, score in scored_recs if score > 0]
-            
-            # If we have matches, use them. Otherwise show best predictions anyway
-            if len(filtered_recommendations) > 0:
-                recommendations = filtered_recommendations[:5]
+            # Scoring function for recommendations
+            def score_recommendation(title, keywords_dict):
+                title_lower = title.lower()
+                score = 0
+                
+                # Primary keywords worth more points
+                for keyword in keywords_dict.get('primary', []):
+                    if keyword in title_lower:
+                        score += 10
+                        
+                # Secondary keywords worth fewer points
+                for keyword in keywords_dict.get('secondary', []):
+                    if keyword in title_lower:
+                        score += 3
+                        
+                    return score
+                
+            if industry in industry_keywords:
+                keywords_dict = industry_keywords[industry]
+                scored_recs = []
+                
+                # Score all recommendations
+                for rec in recommendations:
+                    score = score_recommendation(rec['title'], keywords_dict)
+                    scored_recs.append((rec, score))
+                
+                # Sort by score (descending), then by original match percentage
+                scored_recs.sort(key=lambda x: (-x[1], -x[0]['match']))
+                
+                # Get top recommendations with scores > 0 (matched at least one keyword)
+                filtered_recommendations = [rec for rec, score in scored_recs if score > 0]
+                
+                # If we have matches, use them. Otherwise show best predictions anyway
+                if len(filtered_recommendations) > 0:
+                    recommendations = filtered_recommendations[:5]
+                else:
+                    recommendations = recommendations[:5]
             else:
+                # If industry not found, just return top recommendations
                 recommendations = recommendations[:5]
-        else:
-            # If industry not found, just return top recommendations
-            recommendations = recommendations[:5]
 
-    # Filter TESDA recommendations by course interest
-    if pathway == 'tesda':
-        course_interest = responses.get('course_interest', '').lower()
-        
-        # Define TESDA course categories with primary and secondary keywords
-        course_keywords = {
+        # Filter TESDA recommendations by course interest
+        if pathway == 'tesda':
+            course_interest = responses.get('course_interest', '').lower()
+            
+            # Define TESDA course categories with primary and secondary keywords
+            course_keywords = {
             'ict': {
                 'primary': ['computer', 'systems servicing', 'programming', 'technology'],
                 'secondary': ['ict', 'servicing', 'tech']
@@ -416,76 +575,106 @@ def submit_pathway():
                 'primary': ['agricultural', 'crops', 'farming'],
                 'secondary': ['agriculture', 'production']
             }
-        }
-        
-        # Scoring function for TESDA recommendations
-        def score_tesda_recommendation(title, keywords_dict):
-            title_lower = title.lower()
-            score = 0
+            }
             
-            # Primary keywords worth more points
-            for keyword in keywords_dict.get('primary', []):
-                if keyword in title_lower:
-                    score += 10
-                    
-            # Secondary keywords worth fewer points
-            for keyword in keywords_dict.get('secondary', []):
-                if keyword in title_lower:
-                    score += 3
-                    
-            return score
-        
-        if course_interest in course_keywords:
-            keywords_dict = course_keywords[course_interest]
-            scored_recs = []
-            
-            # Score all recommendations
-            for rec in recommendations:
-                score = score_tesda_recommendation(rec['title'], keywords_dict)
-                scored_recs.append((rec, score))
-            
-            # Sort by score (descending), then by original match percentage
-            scored_recs.sort(key=lambda x: (-x[1], -x[0]['match']))
-            
-            # Get top recommendations with scores > 0 (matched at least one keyword)
-            filtered_recommendations = [rec for rec, score in scored_recs if score > 0]
-            
-            # If we have matches, use them. Otherwise show best predictions anyway
-            if len(filtered_recommendations) > 0:
-                recommendations = filtered_recommendations[:5]
+            # Scoring function for TESDA recommendations
+            def score_tesda_recommendation(title, keywords_dict):
+                title_lower = title.lower()
+                score = 0
+
+                # Primary keywords worth more points
+                for keyword in keywords_dict.get('primary', []):
+                    if keyword in title_lower:
+                        score += 10
+
+                # Secondary keywords worth fewer points
+                for keyword in keywords_dict.get('secondary', []):
+                    if keyword in title_lower:
+                        score += 3
+
+                return score
+            if course_interest in course_keywords:
+                keywords_dict = course_keywords[course_interest]
+                scored_recs = []
+                
+                # Score all recommendations
+                for rec in recommendations:
+                    score = score_tesda_recommendation(rec['title'], keywords_dict)
+                    scored_recs.append((rec, score))
+                
+                # Sort by score (descending), then by original match percentage
+                scored_recs.sort(key=lambda x: (-x[1], -x[0]['match']))
+                
+                # Get top recommendations with scores > 0 (matched at least one keyword)
+                filtered_recommendations = [rec for rec, score in scored_recs if score > 0]
+                
+                # If we have matches, use them. Otherwise show best predictions anyway
+                if len(filtered_recommendations) > 0:
+                    recommendations = filtered_recommendations[:5]
+                else:
+                    recommendations = recommendations[:5]
             else:
+                # If course_interest not found, just return top recommendations
                 recommendations = recommendations[:5]
-        else:
-            # If course_interest not found, just return top recommendations
-            recommendations = recommendations[:5]
 
-    # save responses as before
-    conn = sqlite3.connect('education_system.db')
-    c = conn.cursor()
-    c.execute('INSERT INTO responses (user_id, pathway, responses) VALUES (?, ?, ?)',
-             (session['user_id'], pathway, str(responses)))
-    conn.commit()
-    conn.close()
+        # save responses as before
+        conn = sqlite3.connect('education_system.db')
+        c = conn.cursor()
+        c.execute('INSERT INTO responses (user_id, pathway, responses) VALUES (?, ?, ?)',
+                 (session['user_id'], pathway, str(responses)))
+        conn.commit()
+        conn.close()
 
-    return jsonify({'success': True, 'recommendations': recommendations})
+        return jsonify({'success': True, 'recommendations': recommendations})
+    except Exception as e:
+        import traceback
+        print(f"Error in submit_pathway: {str(e)}")
+        print(traceback.format_exc())
+        return jsonify({
+            'success': False, 
+            'message': f'An error occurred: {str(e)}'
+        }), 500
 
 
 @app.route('/save_recommendation', methods=['POST'])
 def save_recommendation():
-    if 'user_id' not in session:
-        return jsonify({'success': False})
-    
-    data = request.json
-    
-    conn = sqlite3.connect('education_system.db')
-    c = conn.cursor()
-    c.execute('''INSERT INTO recommendations (user_id, pathway, recommendation_data, saved)
-                VALUES (?, ?, ?, 1)''',
-             (session['user_id'], data['pathway'], str(data['recommendation'])))
-    conn.commit()
-    conn.close()
-    
-    return jsonify({'success': True})
+    try:
+        if 'user_id' not in session:
+            return jsonify({'success': False, 'message': 'Not authenticated'})
+        
+        if not request.is_json:
+            return jsonify({'success': False, 'message': 'Request must be JSON'})
+        
+        data = request.json
+        if not data:
+            return jsonify({'success': False, 'message': 'No data provided'})
+        
+        # Handle both 'pathway' and 'pathway_type' for compatibility
+        pathway = data.get('pathway') or data.get('pathway_type')
+        if not pathway:
+            return jsonify({'success': False, 'message': 'Pathway not provided'})
+        
+        recommendation = data.get('recommendation')
+        if not recommendation:
+            return jsonify({'success': False, 'message': 'Recommendation data not provided'})
+        
+        conn = sqlite3.connect('education_system.db')
+        c = conn.cursor()
+        c.execute('''INSERT INTO recommendations (user_id, pathway, recommendation_data, saved)
+                    VALUES (?, ?, ?, 1)''',
+                 (session['user_id'], pathway, str(recommendation)))
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'Recommendation saved successfully'})
+    except Exception as e:
+        import traceback
+        print(f"Error in save_recommendation: {str(e)}")
+        print(traceback.format_exc())
+        return jsonify({
+            'success': False, 
+            'message': f'An error occurred: {str(e)}'
+        }), 500
 
 @app.route('/my_recommendations')
 def my_recommendations():
@@ -705,14 +894,14 @@ def admin_recommendations():
     
     if pathway_filter:
         c.execute('''SELECT r.id, u.username as user_email, r.pathway as pathway_type, 
-                            r.recommendation_data as title, 0.75 as match_score, r.created_at
+                            r.recommendation_data, r.created_at
                     FROM recommendations r 
                     JOIN users u ON r.user_id = u.id 
                     WHERE r.saved = 1 AND r.pathway = ?
                     ORDER BY r.created_at DESC''', (pathway_filter,))
     else:
         c.execute('''SELECT r.id, u.username as user_email, r.pathway as pathway_type, 
-                            r.recommendation_data as title, 0.75 as match_score, r.created_at
+                            r.recommendation_data, r.created_at
                     FROM recommendations r 
                     JOIN users u ON r.user_id = u.id 
                     WHERE r.saved = 1
@@ -720,15 +909,47 @@ def admin_recommendations():
     
     recommendations = []
     for row in c.fetchall():
-        # Extract title from recommendation data (first 50 chars)
-        title_text = str(row[3])[:80] if row[3] else "Unknown"
+        # Parse recommendation data to extract title and match
+        rec_data_str = str(row[3]) if row[3] else "{}"
+        title_text = "Unknown"
+        match_score = 0.75  # default
+        
+        try:
+            # Try to parse as dict string first (most common format)
+            if rec_data_str.startswith('{'):
+                rec_data = ast.literal_eval(rec_data_str)
+            else:
+                # Try JSON parsing
+                rec_data = json.loads(rec_data_str)
+            
+            # Extract title and match from parsed data
+            title_text = rec_data.get('title', 'Unknown')
+            match_score = rec_data.get('match', 0.75)
+            # Convert match percentage to decimal if needed
+            if isinstance(match_score, (int, float)) and match_score > 1:
+                match_score = match_score / 100.0
+        except (ValueError, SyntaxError, json.JSONDecodeError):
+            # If parsing fails, try to extract title from string using regex
+            # Look for 'title': 'value' or "title": "value" patterns
+            title_match = re.search(r"['\"]title['\"]:\s*['\"]([^'\"]+)['\"]", rec_data_str)
+            if title_match:
+                title_text = title_match.group(1)
+            else:
+                # Try another pattern: 'title': 'value'
+                title_match = re.search(r"'title':\s*['\"]([^'\"]+)['\"]", rec_data_str)
+                if title_match:
+                    title_text = title_match.group(1)
+                else:
+                    # Fallback: just use first 50 chars
+                    title_text = rec_data_str[:50] if len(rec_data_str) > 0 else "Unknown"
+        
         recommendations.append({
             'id': row[0],
             'user_email': row[1],
             'pathway_type': row[2],
             'title': title_text,
-            'match_score': row[4],
-            'created_at': row[5]
+            'match_score': match_score,
+            'created_at': row[4]  # created_at is now at index 4 (5th column)
         })
     
     # Get statistics

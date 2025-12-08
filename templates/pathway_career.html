@@ -514,11 +514,18 @@
           messageDiv.style.display = "none";
 
           try {
-            const response = await fetch("/pathway/career", {
+            const response = await fetch("/submit_pathway", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(responses),
+              body: JSON.stringify({
+                pathway: "career",
+                responses: responses,
+              }),
             });
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
             const data = await response.json();
 
@@ -532,7 +539,13 @@
               resultsDiv.style.display = "none";
             }
           } catch (error) {
-            messageDiv.textContent = "An error occurred: " + error.message;
+            console.error("Error details:", error);
+            let errorMessage = "An error occurred: " + error.message;
+            if (error.message.includes("JSON")) {
+              errorMessage =
+                "Server returned an error. Please check if models are loaded and try again.";
+            }
+            messageDiv.textContent = errorMessage;
             messageDiv.className = "message error";
             messageDiv.style.display = "block";
             resultsDiv.style.display = "none";
@@ -630,14 +643,22 @@
             }),
           });
 
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
           const data = await response.json();
 
           if (data.success) {
             alert("Recommendation saved successfully!");
           } else {
-            alert("Failed to save recommendation: " + (data.message || ""));
+            alert(
+              "Failed to save recommendation: " +
+                (data.message || "Unknown error")
+            );
           }
         } catch (error) {
+          console.error("Error saving recommendation:", error);
           alert("Error saving recommendation: " + error.message);
         }
       }

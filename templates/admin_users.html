@@ -52,12 +52,6 @@ block content %}
           <button onclick="filterUsers('all')" class="filter-btn active">
             All
           </button>
-          <button onclick="filterUsers('active')" class="filter-btn">
-            Active
-          </button>
-          <button onclick="filterUsers('inactive')" class="filter-btn">
-            Inactive
-          </button>
         </div>
       </div>
 
@@ -67,7 +61,6 @@ block content %}
           <thead>
             <tr>
               <th>Email</th>
-              <th>Name</th>
               <th>Joined</th>
               <th>Actions</th>
             </tr>
@@ -77,12 +70,6 @@ block content %}
             <tr class="user-row" data-email="{{ user.email }}">
               <td class="email-cell">
                 <span class="badge">{{ user.email }}</span>
-              </td>
-              <td class="name-cell">
-                {% if user.name %}{{ user.name }}{% else %}<span
-                  class="text-muted"
-                  >—</span
-                >{% endif %}
               </td>
               <td class="date-cell">
                 <span class="text-small">{{ user.created_at or 'N/A' }}</span>
@@ -323,6 +310,9 @@ block content %}
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+  }
+  .data-table th:last-child {
+    text-align: right;
   }
   .data-table td {
     padding: 15px 20px;

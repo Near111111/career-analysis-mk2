@@ -46,7 +46,8 @@ class MLModel:
                 encoded = 0
             row.append(encoded)
 
-        X = np.array(row).reshape(1, -1)
+        # Create DataFrame with feature names to avoid sklearn warning
+        X = pd.DataFrame([row], columns=feature_cols)
         probs = model.predict_proba(X)[0]  # probabilities for each target class
         top_idx = np.argsort(probs)[::-1][:k]
 
