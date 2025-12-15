@@ -422,12 +422,32 @@
           <div class="form-group">
             <label for="program_type">Preferred Program Type</label>
             <select id="program_type" required>
-              <option value="">Select...</option>
+              <option value="">Select a Program Type</option>
               <option value="shs">Senior High School (SHS)</option>
-              <option value="college">College</option>
-              <option value="graduate">Graduate</option>
-              <option value="vocational">Vocational</option>
+              <option value="college">College / Bachelor's Degree</option>
+              <option value="graduate">Graduate Programs (Master's / PhD)</option>
+              <option value="vocational">Vocational / Technical Programs</option>
               <option value="als">Alternative Learning System (ALS)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="field_of_interest">Field of Interest (Optional)</label>
+            <select class="form-control" id="field_of_interest" name="field_of_interest">
+              <option value="">Any Field</option>
+              <option value="technology">Technology / ICT</option>
+              <option value="business">Business / Management</option>
+              <option value="healthcare">Healthcare / Medical</option>
+              <option value="engineering">Engineering</option>
+              <option value="creative">Creative Arts / Design</option>
+              <option value="education">Education / Teaching</option>
+              <option value="culinary">Culinary / Food Service</option>
+              <option value="construction">Construction / Trades</option>
+              <option value="agriculture">Agriculture</option>
+              <option value="tourism">Tourism / Hospitality</option>
+              <option value="beauty">Beauty / Wellness</option>
+              <option value="automotive">Automotive</option>
+              <option value="electronics">Electronics</option>
             </select>
           </div>
 
@@ -493,6 +513,7 @@
           const responses = {
             education_level: document.getElementById("education_level").value,
             program_type: document.getElementById("program_type").value,
+            field_of_interest: document.getElementById("field_of_interest").value,
             modality: document.getElementById("learning_modality").value,
             budget: document.getElementById("duration").value, // Send raw value, backend will map
             learning_style: "kinesthetic", // default value

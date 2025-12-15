@@ -465,8 +465,8 @@ def submit_pathway():
             shs_programs = ['stem track', 'ict track', 'abm track', 'humss', 'humanities track', 'tvl', 'arts track', 'sports science']
             college_programs = ['bachelor', 'bs', 'ba', 'bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch', 'engineering', 'nursing', 'accountancy', 'information technology']
             als_programs = ['als', 'alternative learning', 'accreditation', 'equivalency']
-            graduate_programs = ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive', 'professional certification', 'professional master']
-            vocational_programs = ['tesda', 'nc ii', 'automotive servicing', 'welding', 'electrical installation', 'food and beverage', 'housekeeping']
+            graduate_programs = ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive', 'professional certification', 'professional master', 'cpa review', 'pmp', 'cisa', 'lpt review']
+            vocational_programs = ['tesda', 'nc ii', 'nc iii', 'automotive servicing', 'welding', 'electrical installation', 'food and beverage', 'housekeeping', 'computer systems servicing', 'plumbing', 'carpentry', 'masonry', 'caregiving', 'massage therapy', 'cookery', 'bread and pastry', 'bartending', 'hairdressing', 'beauty care', 'nail care', 'agricultural', 'organic agriculture', 'consumer electronics', 'electronic products', 'bookkeeping', 'front office', 'events management', 'construction painting', 'tile setting', 'heavy equipment', 'animation', 'visual graphic design', 'contact center', 'tour guiding', 'travel services', 'electrical maintenance']
             
             for rec in recommendations:
                 title = rec['title'].lower()
@@ -491,6 +491,40 @@ def submit_pathway():
                     'recommendations': []
                 })
             
+            # Field-based filtering (optional)
+            field_of_interest = responses.get('field_of_interest', '').lower()
+            field_program_mapping = {
+                'technology': ['computer', 'it', 'software', 'programming', 'web', 'systems servicing', 'information technology', 'cybersecurity', 'data science', 'stem track', 'ict'],
+                'business': ['business', 'management', 'mba', 'accountancy', 'finance', 'abm', 'bookkeeping', 'administration', 'executive'],
+                'healthcare': ['nursing', 'caregiving', 'massage', 'medical', 'health', 'therapy'],
+                'engineering': ['engineering', 'civil', 'mechanical', 'electrical', 'industrial', 'stem'],
+                'creative': ['arts', 'design', 'animation', 'visual graphic', 'fine arts', 'communication'],
+                'education': ['education', 'teaching', 'teacher', 'mat', 'lpt', 'humss'],
+                'culinary': ['cookery', 'bread', 'pastry', 'food', 'beverage', 'bartending'],
+                'construction': ['welding', 'carpentry', 'masonry', 'plumbing', 'construction', 'tile setting', 'heavy equipment', 'painting'],
+                'agriculture': ['agricultural', 'agriculture', 'crops', 'organic', 'farming'],
+                'tourism': ['tourism', 'hospitality', 'tour guiding', 'travel services', 'hotel', 'front office'],
+                'beauty': ['beauty', 'hairdressing', 'nail care', 'wellness', 'cosmetology'],
+                'automotive': ['automotive', 'servicing', 'mechanic', 'vehicle'],
+                'electronics': ['electronics', 'electrical', 'electronic products', 'consumer electronics', 'electrical maintenance']
+            }
+            
+            # Track which recommendations match the field (to avoid duplicate checking later)
+            field_matched_titles = set()
+            if field_of_interest and field_of_interest in field_program_mapping:
+                field_keywords = field_program_mapping[field_of_interest]
+                field_filtered = []
+                
+                for rec in filtered_recommendations:
+                    title_lower = rec['title'].lower()
+                    if any(kw in title_lower for kw in field_keywords):
+                        field_filtered.append(rec)
+                        field_matched_titles.add(rec['title'])
+                
+                # Only apply field filter if we get results
+                if len(field_filtered) > 0:
+                    filtered_recommendations = field_filtered
+            
             # Define education program keywords for boosting
             program_keywords = {
                 'shs': {
@@ -506,12 +540,12 @@ def submit_pathway():
                     'secondary': ['education', 'system', 'program']
                 },
                 'graduate': {
-                    'primary': ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive'],
-                    'secondary': ['graduate', 'advanced', 'professional', 'certification', 'research', 'science', 'arts', 'business', 'administration']
+                    'primary': ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive', 'mat', 'cpa', 'pmp', 'cisa', 'lpt'],
+                    'secondary': ['graduate', 'advanced', 'professional', 'certification', 'research', 'science', 'arts', 'business', 'administration', 'review', 'licensed']
                 },
                 'vocational': {
-                    'primary': ['tesda', 'nc ii', 'automotive', 'welding', 'electrical', 'servicing'],
-                    'secondary': ['vocational', 'technical', 'training', 'certification', 'installation', 'housekeeping']
+                    'primary': ['tesda', 'nc ii', 'nc iii', 'automotive', 'welding', 'electrical', 'servicing', 'cookery', 'bread', 'pastry', 'caregiving', 'massage', 'hairdressing', 'beauty', 'nail care'],
+                    'secondary': ['vocational', 'technical', 'training', 'certification', 'installation', 'housekeeping', 'plumbing', 'carpentry', 'masonry', 'bartending', 'agricultural', 'electronics', 'bookkeeping', 'front office', 'events', 'construction', 'tile', 'heavy equipment', 'animation', 'graphic design', 'contact center', 'tour guiding', 'travel']
                 }
             }
             
@@ -542,6 +576,10 @@ def submit_pathway():
                         boosted_match = max(rec['match'], MIN_BASE_SCORE)
                         keyword_bonus = min((score / SCORE_DIVISOR) * BONUS_MULTIPLIER, MAX_BONUS)
                         rec['match'] = min(boosted_match + keyword_bonus, MAX_MATCH_SCORE)
+                        
+                        # Add +5% bonus for field of interest match (use cached check)
+                        if rec['title'] in field_matched_titles:
+                            rec['match'] = min(rec['match'] + 5, MAX_MATCH_SCORE)
                     
                     scored_recs.append((rec, score))
                 
