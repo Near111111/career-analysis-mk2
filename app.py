@@ -540,31 +540,31 @@ def submit_pathway():
             # Define TESDA course categories with primary and secondary keywords
             course_keywords = {
             'ict': {
-                'primary': ['computer', 'systems servicing', 'programming', 'technology'],
+                'primary': ['computer', 'systems servicing', 'programming', 'technology', 'web', 'database', 'network'],
                 'secondary': ['ict', 'servicing', 'tech']
             },
             'automotive': {
-                'primary': ['automotive', 'servicing', 'engine'],
+                'primary': ['automotive', 'servicing', 'engine', 'automotive servicing', 'diesel', 'transmission'],
                 'secondary': ['motor', 'vehicle', 'mechanic']
             },
             'construction': {
-                'primary': ['carpentry', 'masonry', 'welding', 'plumbing'],
-                'secondary': ['construction', 'installation']
+                'primary': ['masonry', 'carpentry', 'welding', 'plumbing', 'construction'],
+                'secondary': ['building', 'installation', 'fabrication', 'repair', 'maintenance']
             },
             'electrical': {
-                'primary': ['electrical installation', 'electrical maintenance', 'electrical'],
+                'primary': ['electrical installation', 'electrical maintenance', 'electrical', 'wiring', 'installation and maintenance'],
                 'secondary': ['installation', 'maintenance', 'wiring']
             },
             'electronics': {
-                'primary': ['electronics', 'electrical'],
+                'primary': ['electronics', 'electrical', 'products assembly', 'servicing'],
                 'secondary': ['maintenance', 'technology']
             },
             'food': {
-                'primary': ['cookery', 'bread', 'pastry', 'bartending'],
+                'primary': ['cookery', 'bread', 'pastry', 'bartending', 'food processing'],
                 'secondary': ['food', 'beverage', 'cooking']
             },
             'healthcare': {
-                'primary': ['caregiving', 'health', 'medical', 'nursing'],
+                'primary': ['caregiving', 'health', 'medical', 'nursing', 'massage therapy', 'health care'],
                 'secondary': ['care', 'assistant']
             },
             'beauty': {
@@ -597,12 +597,25 @@ def submit_pathway():
                 keywords_dict = course_keywords[course_interest]
                 scored_recs = []
                 
-                # Score all recommendations
+                # Score all recommendations and boost match percentages
                 for rec in recommendations:
                     score = score_tesda_recommendation(rec['title'], keywords_dict)
+                    
+                    # If there's a keyword match, boost the original match percentage
+                    if score > 0:
+                        # Start with original match or 60% base (whichever is higher)
+                        boosted_match = max(rec['match'], 60.0)
+                        
+                        # Add bonus based on keyword score
+                        # Primary keywords (10 pts each) = +20% per keyword
+                        # Secondary keywords (3 pts each) = +10% per 3 pts
+                        keyword_bonus = min((score / 10) * 20, 35)  # Cap bonus at +35%
+                        
+                        rec['match'] = min(boosted_match + keyword_bonus, 95.0)
+                    
                     scored_recs.append((rec, score))
                 
-                # Sort by score (descending), then by original match percentage
+                # Sort by score (descending), then by boosted match percentage
                 scored_recs.sort(key=lambda x: (-x[1], -x[0]['match']))
                 
                 # Get top recommendations with scores > 0 (matched at least one keyword)
