@@ -461,6 +461,8 @@ def submit_pathway():
                 })
             
             # Define program categories with improved matching
+            # NOTE: Some keywords have trailing spaces (e.g., 'bs ', 'ms ') to prevent false matches
+            # Example: 'bs ' matches "BS in CS" but not "obscure"; 'ms ' matches "MS in Eng" but not "himself"
             shs_programs = ['stem track', 'ict track', 'abm track', 'humss', 'humanities track', 'tvl', 'arts track', 'sports science']
             college_programs = ['bachelor', 'bs ', 'ba ', 'bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch']
             als_programs = ['als', 'alternative learning', 'accreditation', 'equivalency']
