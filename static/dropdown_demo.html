@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education Pathway - Dropdown Fixed</title>
+    <style>
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #f5f3ed;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #000;
+            background-color: #fff;
+            font-size: 14px;
+            outline: none;
+            font-family: "Inter", sans-serif;
+            border-radius: 5px;
+        }
+        .highlight {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 4px solid #4caf50;
+            margin: 20px 0;
+        }
+        .removed {
+            background-color: #ffebee;
+            padding: 15px;
+            border-left: 4px solid #f44336;
+            margin: 20px 0;
+            text-decoration: line-through;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h1>📚 Education Pathway - Dropdown Fixed</h1>
+    
+    <div class="highlight">
+        <strong>✅ FIXED:</strong> Vocational option removed from dropdown
+    </div>
+    
+    <div class="form-group">
+        <label for="education_level">Current Education Level</label>
+        <select id="education_level" required>
+            <option value="">Select...</option>
+            <option value="high_school">High School</option>
+            <option value="associate">Associate Degree</option>
+            <option value="bachelor">Bachelor's Degree</option>
+            <option value="master" selected>Master's Degree</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="program_type">Preferred Program Type</label>
+        <select id="program_type" required>
+            <option value="">Select a Program Type</option>
+            <option value="shs">Senior High School (SHS)</option>
+            <option value="college">College / Bachelor's Degree</option>
+            <option value="graduate" selected>Graduate Programs (Master's / PhD)</option>
+            <option value="als">Alternative Learning System (ALS)</option>
+        </select>
+    </div>
+
+    <div class="removed">
+        ❌ REMOVED: <code>&lt;option value="vocational"&gt;Vocational / Technical Programs&lt;/option&gt;</code>
+    </div>
+
+    <div class="form-group">
+        <label for="field_of_interest">Field of Interest (Optional)</label>
+        <select id="field_of_interest">
+            <option value="">Any Field</option>
+            <option value="technology">Technology / ICT</option>
+            <option value="business">Business / Management</option>
+            <option value="healthcare">Healthcare / Medical</option>
+            <option value="engineering" selected>Engineering</option>
+            <option value="creative">Creative Arts / Design</option>
+            <option value="education">Education / Teaching</option>
+            <option value="culinary">Culinary / Food Service</option>
+            <option value="construction">Construction / Trades</option>
+        </select>
+    </div>
+
+    <div class="highlight">
+        <strong>Test Configuration:</strong><br>
+        • Current Education Level: Master's Degree<br>
+        • Program Type: Graduate Programs (Master's / PhD)<br>
+        • Field: Engineering<br>
+        <br>
+        <strong>Expected Results:</strong><br>
+        ✅ Master of Science in Civil Engineering<br>
+        ✅ Master of Science in Mechanical Engineering<br>
+        ✅ PhD in Engineering<br>
+        ❌ NO Bachelor's programs<br>
+        ❌ NO Vocational programs
+    </div>
+</body>
+</html>
