@@ -423,11 +423,11 @@
             <label for="program_type">Preferred Program Type</label>
             <select id="program_type" required>
               <option value="">Select...</option>
-              <option value="academic">Academic</option>
-              <option value="technical">Technical/Vocational</option>
-              <option value="professional">Professional Certification</option>
-              <option value="online">Online Learning</option>
-              <option value="hybrid">Hybrid/Blended</option>
+              <option value="shs">Senior High School (SHS)</option>
+              <option value="college">College</option>
+              <option value="graduate">Graduate</option>
+              <option value="vocational">Vocational</option>
+              <option value="als">Alternative Learning System (ALS)</option>
             </select>
           </div>
 
@@ -491,6 +491,7 @@
           const resultsDiv = document.getElementById("results");
 
           const responses = {
+            education_level: document.getElementById("education_level").value,
             program_type: document.getElementById("program_type").value,
             modality: document.getElementById("learning_modality").value,
             budget: document.getElementById("duration").value, // Send raw value, backend will map
