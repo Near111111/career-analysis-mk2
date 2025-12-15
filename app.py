@@ -446,10 +446,12 @@ def submit_pathway():
             
             # Define allowed program types based on education level
             allowed_programs = {
-                'master': ['graduate'],
+                'master': ['graduate', 'college'],  # Allow second bachelor's degree
                 'bachelor': ['graduate', 'college'],
                 'associate': ['college', 'graduate'],
-                'high_school': ['shs', 'college', 'als']
+                'vocational': ['college', 'graduate', 'als'],  # Keep for backward compatibility
+                'high_school': ['shs', 'college', 'als'],
+                'phd': ['graduate']  # PhD holders can pursue additional graduate degrees
             }
             
             # Check if program type is allowed for education level
@@ -461,19 +463,25 @@ def submit_pathway():
                 })
             
             # Define program categories with improved matching
-            # NOTE: Some keywords have trailing spaces (e.g., 'bs ', 'ms ') to prevent false matches
-            # Example: 'bs ' matches "BS in CS" but not "obscure"; 'ms ' matches "MS in Eng" but not "himself"
+            # NOTE: Removed trailing spaces from graduate keywords (ms, ma) to allow matching "MS in Engineering"
             shs_programs = ['stem track', 'ict track', 'abm track', 'humss', 'humanities track', 'tvl', 'arts track', 'sports science']
             college_programs = ['bachelor', 'bs ', 'ba ', 'bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch']
             als_programs = ['als', 'alternative learning', 'accreditation', 'equivalency']
-            graduate_programs = ['master', 'mba', 'phd', 'doctorate', 'ms ', 'ma ', 'doctor', 'executive mba', 'professional certification', 'professional master', 'cpa review', 'pmp', 'cisa', 'lpt review', 'dba']
+            graduate_programs = ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive mba', 'professional certification', 'professional master', 'cpa review', 'pmp', 'cisa', 'lpt review', 'dba', 'med', 'edd']
             # Exclude keywords for graduate programs (to prevent bachelor's programs from being included)
             bachelor_exclude_keywords = ['bachelor', 'bs ', 'ba ', 'bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch', 'bse']
+            
+            # Debug logging
+            print(f"DEBUG: Total recommendations before filtering: {len(recommendations)}")
+            print(f"DEBUG: Program type selected: {program_type}")
+            print(f"DEBUG: Education level: {education_level}")
+            if len(recommendations) > 0:
+                print(f"DEBUG: Sample titles: {[rec['title'] for rec in recommendations[:5]]}")
             
             for rec in recommendations:
                 title = rec['title'].lower()
                 
-                # Filter based on program type selection with strict validation
+                # Filter based on program type selection with relaxed validation
                 if program_type == 'shs' and any(prog in title for prog in shs_programs):
                     filtered_recommendations.append(rec)
                 elif program_type == 'college' and any(prog in title for prog in college_programs):
@@ -481,11 +489,25 @@ def submit_pathway():
                 elif program_type == 'als' and any(prog in title for prog in als_programs):
                     filtered_recommendations.append(rec)
                 elif program_type == 'graduate':
-                    # For graduate programs, MUST contain graduate keywords
-                    if any(kw in title for kw in graduate_programs):
-                        # Also EXCLUDE bachelor's keywords
-                        if not any(kw in title for kw in bachelor_exclude_keywords):
-                            filtered_recommendations.append(rec)
+                    # For graduate programs, check for graduate keywords
+                    has_graduate_keyword = any(kw in title for kw in graduate_programs)
+                    # More relaxed bachelor exclusion - only check for exact bachelor degree patterns
+                    has_bachelor_keyword = 'bachelor' in title or title.startswith('bs ') or title.startswith('ba ')
+                    
+                    if has_graduate_keyword and not has_bachelor_keyword:
+                        filtered_recommendations.append(rec)
+            
+            # Debug logging after filtering
+            print(f"DEBUG: Recommendations after program type filter: {len(filtered_recommendations)}")
+            if len(filtered_recommendations) > 0:
+                print(f"DEBUG: Filtered sample titles: {[rec['title'] for rec in filtered_recommendations[:5]]}")
+            
+            # Check if graduate programs exist in dataset
+            if program_type == 'graduate':
+                graduate_in_dataset = [rec for rec in recommendations if any(kw in rec['title'].lower() for kw in ['master', 'phd', 'mba', 'doctorate'])]
+                print(f"DEBUG: Graduate programs in dataset: {len(graduate_in_dataset)}")
+                if len(graduate_in_dataset) > 0:
+                    print(f"DEBUG: Sample graduate programs: {[rec['title'] for rec in graduate_in_dataset[:3]]}")
             
             # If not enough filtered results, return empty with message
             if len(filtered_recommendations) == 0:
@@ -501,7 +523,7 @@ def submit_pathway():
                 'technology': ['computer', 'it', 'software', 'programming', 'web', 'systems servicing', 'information technology', 'cybersecurity', 'data science', 'stem track', 'ict'],
                 'business': ['business', 'management', 'mba', 'accountancy', 'finance', 'abm', 'bookkeeping', 'administration', 'executive'],
                 'healthcare': ['nursing', 'caregiving', 'massage', 'medical', 'health', 'therapy'],
-                'engineering': ['engineering', 'civil', 'mechanical', 'electrical', 'industrial', 'stem'],
+                'engineering': ['engineering', 'engineer', 'civil', 'mechanical', 'electrical', 'industrial', 'structural', 'chemical', 'stem'],
                 'creative': ['arts', 'design', 'animation', 'visual graphic', 'fine arts', 'communication'],
                 'education': ['education', 'teaching', 'teacher', 'mat', 'lpt', 'humss'],
                 'culinary': ['cookery', 'bread', 'pastry', 'food', 'beverage', 'bartending'],
