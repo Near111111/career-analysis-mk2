@@ -431,6 +431,15 @@ def submit_pathway():
 
         # Filter education recommendations by program type
         if pathway == 'education':
+            # Scoring constants for education recommendations (matching TESDA and Career pathways)
+            PRIMARY_KEYWORD_POINTS = 10
+            SECONDARY_KEYWORD_POINTS = 3
+            BASE_MATCH_PERCENTAGE = 65.0
+            SCORE_DIVISOR = 10
+            BONUS_MULTIPLIER = 20
+            MAX_BONUS = 30
+            MAX_MATCH_PERCENTAGE = 95.0
+            
             program_type = responses.get('program_type', '').lower()
             filtered_recommendations = []
             
@@ -477,11 +486,11 @@ def submit_pathway():
                 
                 for keyword in keywords_dict.get('primary', []):
                     if keyword in title_lower:
-                        score += 10
+                        score += PRIMARY_KEYWORD_POINTS
                 
                 for keyword in keywords_dict.get('secondary', []):
                     if keyword in title_lower:
-                        score += 3
+                        score += SECONDARY_KEYWORD_POINTS
                 
                 return score
             
@@ -494,9 +503,9 @@ def submit_pathway():
                     score = score_education_recommendation(rec['title'], keywords_dict)
                     
                     if score > 0:
-                        boosted_match = max(rec['match'], 65.0)
-                        keyword_bonus = min((score / 10) * 20, 30)
-                        rec['match'] = min(boosted_match + keyword_bonus, 95.0)
+                        boosted_match = max(rec['match'], BASE_MATCH_PERCENTAGE)
+                        keyword_bonus = min((score / SCORE_DIVISOR) * BONUS_MULTIPLIER, MAX_BONUS)
+                        rec['match'] = min(boosted_match + keyword_bonus, MAX_MATCH_PERCENTAGE)
                     
                     scored_recs.append((rec, score))
                 
@@ -512,6 +521,15 @@ def submit_pathway():
 
         # Filter career recommendations by industry
         if pathway == 'career':
+            # Scoring constants for career recommendations (matching TESDA and Education pathways)
+            PRIMARY_KEYWORD_POINTS = 10
+            SECONDARY_KEYWORD_POINTS = 3
+            BASE_MATCH_PERCENTAGE = 65.0
+            SCORE_DIVISOR = 10
+            BONUS_MULTIPLIER = 20
+            MAX_BONUS = 30
+            MAX_MATCH_PERCENTAGE = 95.0
+            
             industry = responses.get('industry', '').lower()
             
             # Define career categories with comprehensive keyword matching
@@ -524,7 +542,7 @@ def submit_pathway():
                 'primary': ['nurse', 'nursing', 'medical', 'health', 'care', 'therapy', 'therapist', 'clinical'],
                 'secondary': ['assistant', 'technician', 'caregiver', 'wellness', 'patient']
             },
-            'health': {
+            'health': {  # Alias for 'healthcare' to support both form inputs and dataset values
                 'primary': ['nurse', 'nursing', 'medical', 'health', 'care', 'therapy', 'therapist', 'clinical'],
                 'secondary': ['assistant', 'technician', 'caregiver', 'wellness', 'patient']
             },
@@ -566,12 +584,12 @@ def submit_pathway():
                 # Primary keywords worth more points
                 for keyword in keywords_dict.get('primary', []):
                     if keyword in title_lower:
-                        score += 10
+                        score += PRIMARY_KEYWORD_POINTS
                         
                 # Secondary keywords worth fewer points
                 for keyword in keywords_dict.get('secondary', []):
                     if keyword in title_lower:
-                        score += 3
+                        score += SECONDARY_KEYWORD_POINTS
                         
                 return score
                 
@@ -585,13 +603,13 @@ def submit_pathway():
                     
                     # Boost match percentage if there's a keyword match
                     if score > 0:
-                        # Start with original match or 65% base (whichever is higher)
-                        boosted_match = max(rec['match'], 65.0)
+                        # Start with original match or base percentage (whichever is higher)
+                        boosted_match = max(rec['match'], BASE_MATCH_PERCENTAGE)
                         
                         # Add bonus based on keyword score
-                        keyword_bonus = min((score / 10) * 20, 30)  # Cap bonus at +30%
+                        keyword_bonus = min((score / SCORE_DIVISOR) * BONUS_MULTIPLIER, MAX_BONUS)
                         
-                        rec['match'] = min(boosted_match + keyword_bonus, 95.0)
+                        rec['match'] = min(boosted_match + keyword_bonus, MAX_MATCH_PERCENTAGE)
                     
                     scored_recs.append((rec, score))
                 
