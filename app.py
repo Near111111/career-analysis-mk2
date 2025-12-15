@@ -540,31 +540,31 @@ def submit_pathway():
             # Define TESDA course categories with primary and secondary keywords
             course_keywords = {
             'ict': {
-                'primary': ['computer', 'systems servicing', 'programming', 'technology'],
+                'primary': ['computer', 'systems servicing', 'programming', 'technology', 'web', 'database', 'network'],
                 'secondary': ['ict', 'servicing', 'tech']
             },
             'automotive': {
-                'primary': ['automotive', 'servicing', 'engine'],
+                'primary': ['automotive', 'servicing', 'engine', 'automotive servicing', 'diesel', 'transmission'],
                 'secondary': ['motor', 'vehicle', 'mechanic']
             },
             'construction': {
-                'primary': ['carpentry', 'masonry', 'welding', 'plumbing'],
-                'secondary': ['construction', 'installation']
+                'primary': ['masonry', 'carpentry', 'welding', 'plumbing', 'construction'],
+                'secondary': ['building', 'installation', 'fabrication', 'repair', 'maintenance']
             },
             'electrical': {
-                'primary': ['electrical installation', 'electrical maintenance', 'electrical'],
+                'primary': ['electrical installation', 'electrical maintenance', 'electrical', 'wiring', 'installation and maintenance'],
                 'secondary': ['installation', 'maintenance', 'wiring']
             },
             'electronics': {
-                'primary': ['electronics', 'electrical'],
+                'primary': ['electronics', 'electrical', 'products assembly', 'servicing'],
                 'secondary': ['maintenance', 'technology']
             },
             'food': {
-                'primary': ['cookery', 'bread', 'pastry', 'bartending'],
+                'primary': ['cookery', 'bread', 'pastry', 'bartending', 'food processing'],
                 'secondary': ['food', 'beverage', 'cooking']
             },
             'healthcare': {
-                'primary': ['caregiving', 'health', 'medical', 'nursing'],
+                'primary': ['caregiving', 'health', 'medical', 'nursing', 'massage therapy', 'health care'],
                 'secondary': ['care', 'assistant']
             },
             'beauty': {
@@ -577,6 +577,14 @@ def submit_pathway():
             }
             }
             
+            # Scoring constants for TESDA recommendations
+            PRIMARY_KEYWORD_POINTS = 10  # Points awarded per primary keyword match
+            SECONDARY_KEYWORD_POINTS = 3  # Points awarded per secondary keyword match
+            MIN_BASE_SCORE = 60.0  # Minimum match percentage for keyword matches
+            BONUS_MULTIPLIER = 20  # Percentage bonus per 10 keyword points
+            MAX_BONUS = 35  # Maximum bonus percentage from keywords
+            MAX_MATCH_SCORE = 95.0  # Maximum possible match percentage
+            
             # Scoring function for TESDA recommendations
             def score_tesda_recommendation(title, keywords_dict):
                 title_lower = title.lower()
@@ -585,24 +593,36 @@ def submit_pathway():
                 # Primary keywords worth more points
                 for keyword in keywords_dict.get('primary', []):
                     if keyword in title_lower:
-                        score += 10
+                        score += PRIMARY_KEYWORD_POINTS
 
                 # Secondary keywords worth fewer points
                 for keyword in keywords_dict.get('secondary', []):
                     if keyword in title_lower:
-                        score += 3
+                        score += SECONDARY_KEYWORD_POINTS
 
                 return score
             if course_interest in course_keywords:
                 keywords_dict = course_keywords[course_interest]
                 scored_recs = []
                 
-                # Score all recommendations
+                # Score all recommendations and boost match percentages
                 for rec in recommendations:
                     score = score_tesda_recommendation(rec['title'], keywords_dict)
+                    
+                    # If there's a keyword match, boost the original match percentage
+                    if score > 0:
+                        # Start with original match or minimum base score (whichever is higher)
+                        boosted_match = max(rec['match'], MIN_BASE_SCORE)
+                        
+                        # Add bonus based on keyword score
+                        # Each PRIMARY_KEYWORD_POINTS adds BONUS_MULTIPLIER% to match
+                        keyword_bonus = min((score / PRIMARY_KEYWORD_POINTS) * BONUS_MULTIPLIER, MAX_BONUS)
+                        
+                        rec['match'] = min(boosted_match + keyword_bonus, MAX_MATCH_SCORE)
+                    
                     scored_recs.append((rec, score))
                 
-                # Sort by score (descending), then by original match percentage
+                # Sort by score (descending), then by boosted match percentage
                 scored_recs.sort(key=lambda x: (-x[1], -x[0]['match']))
                 
                 # Get top recommendations with scores > 0 (matched at least one keyword)
