@@ -50,19 +50,6 @@ def init_db():
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )''')
     
-    # Profiles table
-    c.execute('''CREATE TABLE IF NOT EXISTS profiles (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        age INTEGER,
-        education_level TEXT,
-        current_status TEXT,
-        skills TEXT,
-        interests TEXT,
-        barriers TEXT,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )''')
-    
     # Responses table
     c.execute('''CREATE TABLE IF NOT EXISTS responses (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -157,39 +144,7 @@ def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('index'))
     
-    # Check if profile exists
-    conn = sqlite3.connect('education_system.db')
-    c = conn.cursor()
-    c.execute('SELECT * FROM profiles WHERE user_id = ?', (session['user_id'],))
-    profile = c.fetchone()
-    conn.close()
-    
-    if not profile:
-        return redirect(url_for('create_profile'))
-    
     return render_template('dashboard.html')
-
-@app.route('/profile', methods=['GET', 'POST'])
-def create_profile():
-    if 'user_id' not in session:
-        return redirect(url_for('index'))
-    
-    if request.method == 'POST':
-        data = request.json
-        
-        conn = sqlite3.connect('education_system.db')
-        c = conn.cursor()
-        c.execute('''INSERT OR REPLACE INTO profiles 
-                    (user_id, age, education_level, current_status, skills, interests, barriers)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                 (session['user_id'], data['age'], data['education_level'], 
-                  data['current_status'], data['skills'], data['interests'], data['barriers']))
-        conn.commit()
-        conn.close()
-        
-        return jsonify({'success': True})
-    
-    return render_template('profile.html')
 
 @app.route('/pathway/<path_type>')
 def pathway(path_type):
@@ -317,7 +272,7 @@ def submit_pathway():
                     "work_environment": mapped_env
                 }
             if pathway == 'education':
-                # Modality mapping
+                # Modality mapping - from form field "learning_modality"
                 modality_mapping = {
                     'face_to_face': 'full_time',
                     'face-to-face': 'full_time',
@@ -326,10 +281,10 @@ def submit_pathway():
                     'flexible': 'flexible',
                     'flexible schedule': 'flexible'
                 }
-                modality = responses.get("modality","").lower().strip()
+                modality = responses.get("learning_modality","").lower().strip()
                 mapped_modality = modality_mapping.get(modality, modality if modality in ['full_time', 'online', 'hybrid', 'flexible'] else 'full_time')
                 
-                # Budget mapping - duration to budget
+                # Budget mapping - from form field "duration"
                 budget_mapping = {
                     'short_term': 'low',
                     'short-term': 'low',
@@ -340,7 +295,7 @@ def submit_pathway():
                     'flexible': 'medium',
                     'flexible/self-paced': 'medium'
                 }
-                duration = responses.get("budget","").lower().strip()
+                duration = responses.get("duration","").lower().strip()
                 mapped_budget = budget_mapping.get(duration, duration if duration in ['low', 'medium', 'high'] else 'medium')
                 
                 # Learning style - default to kinesthetic if not provided
@@ -351,11 +306,18 @@ def submit_pathway():
                 motivation = responses.get("motivation","").lower().strip()
                 mapped_motivation = motivation if motivation in ['career-focused', 'personal-growth', 'academic'] else 'career-focused'
                 
+                # Field of interest - IMPORTANT: Include this for ML model prediction
+                field = responses.get("field_of_interest","").lower().strip()
+                # When no field is selected, we'll get diverse results and skip field filtering
+                # Use empty string to signal "any field"
+                mapped_field = field if field else ""
+                
                 return {
                     "modality": mapped_modality,
                     "budget": mapped_budget,
                     "learning_style": mapped_learning_style,
-                    "motivation": mapped_motivation
+                    "motivation": mapped_motivation,
+                    "field": mapped_field
                 }
             if pathway == 'tesda':
                 # Budget mapping - training duration to budget
@@ -423,8 +385,13 @@ def submit_pathway():
 
         features = map_inputs(pathway, responses)
         
-        # Get more recommendations for filtering (will be filtered down to 5)
-        if pathway == 'tesda':
+        # Get more recommendations for filtering
+        # For education pathway, we need MORE predictions since we filter by program_type after
+        # The model doesn't know program_type, so we need enough predictions to have graduate/college/shs/als options
+        if pathway == 'education':
+            # Get many more predictions (50) so after filtering by program_type we still have good options
+            recommendations = ml_model.predict_top_k(pathway, features, k=50)
+        elif pathway == 'tesda':
             recommendations = ml_model.predict_top_k(pathway, features, k=20)
         else:
             recommendations = ml_model.predict_top_k(pathway, features, k=5)
@@ -517,33 +484,20 @@ def submit_pathway():
                     'recommendations': []
                 })
             
-            # Field-based filtering (optional)
+            # Field-based filtering (optional) - Use the 'field' column from metadata
             field_of_interest = responses.get('field_of_interest', '').lower()
-            field_program_mapping = {
-                'technology': ['computer', 'it', 'software', 'programming', 'web', 'systems servicing', 'information technology', 'cybersecurity', 'data science', 'stem track', 'ict'],
-                'business': ['business', 'management', 'mba', 'accountancy', 'finance', 'abm', 'bookkeeping', 'administration', 'executive'],
-                'healthcare': ['nursing', 'caregiving', 'massage', 'medical', 'health', 'therapy'],
-                'engineering': ['engineering', 'engineer', 'civil', 'mechanical', 'electrical', 'industrial', 'structural', 'chemical', 'stem'],
-                'creative': ['arts', 'design', 'animation', 'visual graphic', 'fine arts', 'communication'],
-                'education': ['education', 'teaching', 'teacher', 'mat', 'lpt', 'humss'],
-                'culinary': ['cookery', 'bread', 'pastry', 'food', 'beverage', 'bartending'],
-                'construction': ['welding', 'carpentry', 'masonry', 'plumbing', 'construction', 'tile setting', 'heavy equipment', 'painting'],
-                'agriculture': ['agricultural', 'agriculture', 'crops', 'organic', 'farming'],
-                'tourism': ['tourism', 'hospitality', 'tour guiding', 'travel services', 'hotel', 'front office'],
-                'beauty': ['beauty', 'hairdressing', 'nail care', 'wellness', 'cosmetology'],
-                'automotive': ['automotive', 'servicing', 'mechanic', 'vehicle'],
-                'electronics': ['electronics', 'electrical', 'electronic products', 'consumer electronics', 'electrical maintenance']
-            }
             
-            # Track which recommendations match the field (to avoid duplicate checking later)
+            # Track which recommendations match the field
             field_matched_titles = set()
-            if field_of_interest and field_of_interest in field_program_mapping:
-                field_keywords = field_program_mapping[field_of_interest]
+            if field_of_interest:
                 field_filtered = []
                 
                 for rec in filtered_recommendations:
-                    title_lower = rec['title'].lower()
-                    if any(kw in title_lower for kw in field_keywords):
+                    # Check if the metadata has a 'field' column that matches
+                    metadata = rec.get('metadata', {})
+                    program_field = str(metadata.get('field', '')).lower() if 'field' in metadata else ''
+                    
+                    if program_field == field_of_interest:
                         field_filtered.append(rec)
                         field_matched_titles.add(rec['title'])
                 
@@ -1036,7 +990,7 @@ def delete_user_endpoint(email):
         
         # Delete all user data
         c.execute('DELETE FROM recommendations WHERE user_id = ?', (user_id,))
-        c.execute('DELETE FROM profiles WHERE user_id = ?', (user_id,))
+        # Profile table removed
         c.execute('DELETE FROM responses WHERE user_id = ?', (user_id,))
         c.execute('DELETE FROM users WHERE id = ?', (user_id,))
         

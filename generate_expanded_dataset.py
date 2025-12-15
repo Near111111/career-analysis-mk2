@@ -123,23 +123,114 @@ def generate_education_dataset():
         ("Arts Track SHS", "shs", "full_time", "medium", "visual", "interest-based"),
     ]
     
-    # College Programs
-    college_programs = [
+    # College Programs - Technology / ICT
+    tech_college = [
         ("Bachelor of Science in Computer Science", "college", "full_time", "high", "kinesthetic", "career-focused"),
-        ("Bachelor of Science in Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
-        ("Bachelor of Science in Nursing", "college", "full_time", "high", "kinesthetic", "career-focused"),
-        ("Bachelor of Science in Business Administration", "college", "full_time", "high", "auditory", "career-focused"),
-        ("Bachelor of Arts in Education", "college", "full_time", "medium", "auditory", "career-focused"),
-        ("Bachelor of Arts in Communication", "college", "full_time", "medium", "auditory", "interest-based"),
-        ("Bachelor of Fine Arts", "college", "full_time", "high", "visual", "interest-based"),
-        ("Bachelor of Science in Psychology", "college", "full_time", "medium", "auditory", "interest-based"),
         ("Bachelor of Science in Information Technology", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Computer Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Data Science", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Cybersecurity", "college", "full_time", "high", "kinesthetic", "career-focused"),
+    ]
+    
+    # College Programs - Business / Management
+    business_college = [
+        ("Bachelor of Science in Business Administration", "college", "full_time", "high", "auditory", "career-focused"),
         ("Bachelor of Science in Accountancy", "college", "full_time", "high", "auditory", "career-focused"),
+        ("Bachelor of Science in Management", "college", "full_time", "high", "auditory", "career-focused"),
+        ("Bachelor of Science in Finance", "college", "full_time", "high", "auditory", "career-focused"),
+        ("Bachelor of Science in Economics", "college", "full_time", "high", "auditory", "career-focused"),
+    ]
+    
+    # College Programs - Healthcare / Medical
+    healthcare_college = [
+        ("Bachelor of Science in Nursing", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Pharmacy", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Medical Technology", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Health Sciences", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Physical Therapy", "college", "full_time", "high", "kinesthetic", "career-focused"),
+    ]
+    
+    # College Programs - Engineering
+    engineering_college = [
         ("Bachelor of Science in Civil Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Mechanical Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Electrical Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Electronics Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Chemical Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
+    ]
+    
+    # College Programs - Creative / Design
+    creative_college = [
+        ("Bachelor of Fine Arts", "college", "full_time", "high", "visual", "interest-based"),
+        ("Bachelor of Arts in Graphic Design", "college", "full_time", "medium", "visual", "interest-based"),
+        ("Bachelor of Arts in Interior Design", "college", "full_time", "medium", "visual", "interest-based"),
+        ("Bachelor of Arts in Fashion Design", "college", "full_time", "medium", "visual", "interest-based"),
+        ("Bachelor of Arts in Film and Video Production", "college", "full_time", "high", "visual", "interest-based"),
+    ]
+    
+    # College Programs - Education / Teaching
+    education_college = [
+        ("Bachelor of Arts in Education", "college", "full_time", "medium", "auditory", "career-focused"),
+        ("Bachelor of Science in Education - STEM", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Education - Mathematics", "college", "full_time", "medium", "auditory", "career-focused"),
+        ("Bachelor of Science in Education - English", "college", "full_time", "medium", "visual", "career-focused"),
+        ("Bachelor of Science in Education - Science", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+    ]
+    
+    # College Programs - Culinary / Food Service
+    culinary_college = [
+        ("Bachelor of Science in Culinary Arts", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Food Technology", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Diploma in Culinary Arts", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+    ]
+    
+    # College Programs - Construction / Trades
+    construction_college = [
         ("Bachelor of Science in Architecture", "college", "full_time", "high", "visual", "career-focused"),
+        ("Bachelor of Science in Civil Engineering - Construction", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Certificate in Construction Management", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+    ]
+    
+    # College Programs - Agriculture
+    agriculture_college = [
+        ("Bachelor of Science in Agriculture", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Agronomy", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Agricultural Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Bachelor of Science in Horticulture", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+    ]
+    
+    # College Programs - Tourism / Hospitality
+    tourism_college = [
         ("Bachelor of Science in Hospitality Management", "college", "full_time", "medium", "auditory", "career-focused"),
+        ("Bachelor of Science in Tourism Management", "college", "full_time", "medium", "visual", "career-focused"),
+        ("Bachelor of Science in Hotel and Restaurant Management", "college", "full_time", "medium", "auditory", "career-focused"),
         ("Bachelor of Science in Tourism", "college", "full_time", "medium", "visual", "interest-based"),
     ]
+    
+    # College Programs - Beauty / Wellness
+    beauty_college = [
+        ("Bachelor of Science in Beauty and Wellness", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+        ("Certificate in Cosmetology", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+        ("Diploma in Spa and Wellness Management", "college", "full_time", "medium", "auditory", "career-focused"),
+    ]
+    
+    # College Programs - Automotive
+    automotive_college = [
+        ("Bachelor of Science in Automotive Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Diploma in Automotive Technology", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+    ]
+    
+    # College Programs - Electronics
+    electronics_college = [
+        ("Bachelor of Science in Electronics Engineering", "college", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Diploma in Electronics Technology", "college", "full_time", "medium", "kinesthetic", "career-focused"),
+    ]
+    
+    # Combine all college programs
+    college_programs = (tech_college + business_college + healthcare_college + 
+                       engineering_college + creative_college + education_college +
+                       culinary_college + construction_college + agriculture_college +
+                       tourism_college + beauty_college + automotive_college + electronics_college)
     
     # Alternative Learning System (ALS)
     als_programs = [
@@ -147,9 +238,25 @@ def generate_education_dataset():
         ("ALS Professional Development", "als", "part_time", "medium", "auditory", "career-focused"),
         ("ALS Entrepreneurship", "als", "part_time", "low", "kinesthetic", "interest-based"),
         ("ALS Tech Skills", "als", "part_time", "medium", "kinesthetic", "career-focused"),
+        ("ALS Business Skills", "als", "part_time", "medium", "auditory", "career-focused"),
+        ("ALS Healthcare Basics", "als", "part_time", "medium", "kinesthetic", "career-focused"),
     ]
     
-    all_programs = shs_programs + college_programs + als_programs
+    # Graduate Programs
+    graduate_programs = [
+        ("Master of Business Administration (MBA)", "graduate", "full_time", "high", "auditory", "career-focused"),
+        ("Master of Science in Computer Science", "graduate", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Master of Science in Engineering", "graduate", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Master of Science in Information Technology", "graduate", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Master of Arts in Education", "graduate", "full_time", "high", "auditory", "career-focused"),
+        ("Master of Science in Data Science", "graduate", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Master of Science in Nursing", "graduate", "full_time", "high", "kinesthetic", "career-focused"),
+        ("Master of Arts in Communication", "graduate", "full_time", "high", "auditory", "interest-based"),
+        ("Doctor of Philosophy (PhD) - Technology", "graduate", "full_time", "high", "kinesthetic", "interest-based"),
+        ("Doctor of Philosophy (PhD) - Business", "graduate", "full_time", "high", "auditory", "interest-based"),
+    ]
+    
+    all_programs = shs_programs + college_programs + als_programs + graduate_programs
     
     programs_list = []
     for program_name, program_type, modality, budget, learning_style, motivation in all_programs:

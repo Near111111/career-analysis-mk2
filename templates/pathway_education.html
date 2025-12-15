@@ -393,7 +393,6 @@
         <nav class="nav-menu">
           <a href="/dashboard" class="active">Dashboard</a>
           <a href="/my_recommendations">My Recommendations</a>
-          <a href="/profile">Profile</a>
         </nav>
       </div>
       <button class="logout-btn" onclick="handleLogout()">Logout</button>
@@ -513,10 +512,10 @@
             education_level: document.getElementById("education_level").value,
             program_type: document.getElementById("program_type").value,
             field_of_interest: document.getElementById("field_of_interest").value,
-            modality: document.getElementById("learning_modality").value,
-            budget: document.getElementById("duration").value, // Send raw value, backend will map
-            learning_style: "kinesthetic", // default value
-            motivation: "career-focused", // default value
+            learning_modality: document.getElementById("learning_modality").value,
+            duration: document.getElementById("duration").value,
+            learning_style: "kinesthetic",
+            motivation: "career-focused",
           };
 
           // Show loading

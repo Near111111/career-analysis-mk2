@@ -1,125 +1,207 @@
-program_name,program_type,modality,budget,learning_style,motivation
-STEM Track SHS,shs,full_time,low,kinesthetic,career-focused
-STEM Track SHS,shs,full_time,low,kinesthetic,career-focused
-Humanities Track SHS,shs,full_time,low,visual,career-focused
-Humanities Track SHS,shs,full_time,low,visual,career-focused
-ABM Track SHS,shs,full_time,low,auditory,career-focused
-ABM Track SHS,shs,full_time,low,auditory,career-focused
-Sports Science SHS,shs,full_time,medium,kinesthetic,interest-based
-Sports Science SHS,shs,full_time,medium,kinesthetic,interest-based
-Arts Track SHS,shs,full_time,medium,visual,interest-based
-Arts Track SHS,shs,full_time,medium,visual,interest-based
-Bachelor of Science in Computer Science,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Computer Science,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Engineering,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Engineering,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Nursing,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Nursing,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Business Administration,college,full_time,high,auditory,career-focused
-Bachelor of Science in Business Administration,college,full_time,high,auditory,career-focused
-Bachelor of Arts in Education,college,full_time,medium,auditory,career-focused
-Bachelor of Arts in Education,college,full_time,medium,auditory,career-focused
-Bachelor of Arts in Communication,college,full_time,medium,auditory,interest-based
-Bachelor of Arts in Communication,college,full_time,medium,auditory,interest-based
-Bachelor of Fine Arts,college,full_time,high,visual,interest-based
-Bachelor of Fine Arts,college,full_time,high,visual,interest-based
-Bachelor of Science in Psychology,college,full_time,medium,auditory,interest-based
-Bachelor of Science in Psychology,college,full_time,medium,auditory,interest-based
-Bachelor of Science in Information Technology,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Information Technology,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Accountancy,college,full_time,high,auditory,career-focused
-Bachelor of Science in Accountancy,college,full_time,high,auditory,career-focused
-Bachelor of Science in Civil Engineering,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Civil Engineering,college,full_time,high,kinesthetic,career-focused
-Bachelor of Science in Architecture,college,full_time,high,visual,career-focused
-Bachelor of Science in Architecture,college,full_time,high,visual,career-focused
-Bachelor of Science in Hospitality Management,college,full_time,medium,auditory,career-focused
-Bachelor of Science in Hospitality Management,college,full_time,medium,auditory,career-focused
-Bachelor of Science in Tourism,college,full_time,medium,visual,interest-based
-Bachelor of Science in Tourism,college,full_time,medium,visual,interest-based
-ALS Accreditation and Equivalency (A&E),als,part_time,low,visual,career-focused
-ALS Accreditation and Equivalency (A&E),als,part_time,low,visual,career-focused
-ALS Professional Development,als,part_time,medium,auditory,career-focused
-ALS Professional Development,als,part_time,medium,auditory,career-focused
-ALS Entrepreneurship,als,part_time,low,kinesthetic,interest-based
-ALS Entrepreneurship,als,part_time,low,kinesthetic,interest-based
-ALS Tech Skills,als,part_time,medium,kinesthetic,career-focused
-ALS Tech Skills,als,part_time,medium,kinesthetic,career-focused
-Master of Business Administration (MBA),graduate,full_time,high,auditory,career-focused
-Master of Business Administration (MBA),graduate,full_time,high,auditory,career-focused
-Master of Science in Computer Science,graduate,full_time,high,kinesthetic,career-focused
-Master of Science in Computer Science,graduate,full_time,high,kinesthetic,career-focused
-Master of Science in Data Science,graduate,full_time,high,kinesthetic,career-focused
-Master of Science in Data Science,graduate,full_time,high,kinesthetic,career-focused
-Master of Arts in Education,graduate,full_time,high,auditory,career-focused
-Master of Arts in Education,graduate,full_time,high,auditory,career-focused
-Master of Public Administration,graduate,full_time,high,auditory,career-focused
-Master of Public Administration,graduate,full_time,high,auditory,career-focused
-Master of Science in Engineering,graduate,full_time,high,kinesthetic,career-focused
-Master of Science in Engineering,graduate,full_time,high,kinesthetic,career-focused
-Master of Science in Nursing,graduate,full_time,high,kinesthetic,career-focused
-Master of Science in Nursing,graduate,full_time,high,kinesthetic,career-focused
-PhD in Computer Science,graduate,full_time,high,kinesthetic,career-focused
-PhD in Computer Science,graduate,full_time,high,kinesthetic,career-focused
-PhD in Engineering,graduate,full_time,high,kinesthetic,career-focused
-PhD in Engineering,graduate,full_time,high,kinesthetic,career-focused
-PhD in Education,graduate,full_time,high,auditory,career-focused
-PhD in Education,graduate,full_time,high,auditory,career-focused
-PhD in Business Administration,graduate,full_time,high,auditory,career-focused
-PhD in Business Administration,graduate,full_time,high,auditory,career-focused
-Master of Science in Information Technology,graduate,full_time,high,kinesthetic,career-focused
-Master of Science in Information Technology,graduate,full_time,high,kinesthetic,career-focused
-Master of Science in Cybersecurity,graduate,full_time,high,kinesthetic,career-focused
-Master of Science in Cybersecurity,graduate,full_time,high,kinesthetic,career-focused
-Professional Master's in Project Management,graduate,hybrid,high,auditory,career-focused
-Professional Master's in Project Management,graduate,hybrid,high,auditory,career-focused
-Executive MBA,graduate,hybrid,high,auditory,career-focused
-Executive MBA,graduate,hybrid,high,auditory,career-focused
-Master of Science in Healthcare Administration,graduate,full_time,high,auditory,career-focused
-Master of Science in Healthcare Administration,graduate,full_time,high,auditory,career-focused
-Master of Arts in Psychology,graduate,full_time,medium,auditory,interest-based
-Master of Arts in Psychology,graduate,full_time,medium,auditory,interest-based
-Doctor of Education (EdD),graduate,hybrid,high,auditory,career-focused
-Doctor of Education (EdD),graduate,hybrid,high,auditory,career-focused
-Professional Certification in Digital Marketing,graduate,online,medium,visual,career-focused
-Professional Certification in Digital Marketing,graduate,online,medium,visual,career-focused
-Professional Certification in Cloud Computing,graduate,online,medium,kinesthetic,career-focused
-Professional Certification in Cloud Computing,graduate,online,medium,kinesthetic,career-focused
-Master in Teaching (MAT),graduate,full_time,high,auditory,career-focused
-Master in Teaching (MAT),graduate,full_time,high,auditory,career-focused
-Master of Arts in Communication,graduate,full_time,medium,auditory,career-focused
-Master of Arts in Communication,graduate,full_time,medium,auditory,career-focused
-PhD in Psychology,graduate,full_time,high,auditory,career-focused
-PhD in Psychology,graduate,full_time,high,auditory,career-focused
-Certified Public Accountant (CPA) Review Program,graduate,hybrid,medium,auditory,career-focused
-Certified Public Accountant (CPA) Review Program,graduate,hybrid,medium,auditory,career-focused
-Project Management Professional (PMP) Certification,graduate,online,medium,kinesthetic,career-focused
-Project Management Professional (PMP) Certification,graduate,online,medium,kinesthetic,career-focused
-Certified Information Systems Auditor (CISA),graduate,online,medium,kinesthetic,career-focused
-Certified Information Systems Auditor (CISA),graduate,online,medium,kinesthetic,career-focused
-Licensed Professional Teacher (LPT) Review,graduate,hybrid,medium,auditory,career-focused
-Licensed Professional Teacher (LPT) Review,graduate,hybrid,medium,auditory,career-focused
-Master of Science in Civil Engineering,graduate,hybrid,high,kinesthetic,career-focused
-Master of Science in Civil Engineering,graduate,hybrid,high,kinesthetic,career-focused
-Master of Science in Mechanical Engineering,graduate,hybrid,high,kinesthetic,career-focused
-Master of Science in Mechanical Engineering,graduate,hybrid,high,kinesthetic,career-focused
-Master of Science in Electrical Engineering,graduate,hybrid,high,kinesthetic,career-focused
-Master of Science in Electrical Engineering,graduate,hybrid,high,kinesthetic,career-focused
-Master of Science in Industrial Engineering,graduate,hybrid,high,kinesthetic,career-focused
-Master of Science in Industrial Engineering,graduate,hybrid,high,kinesthetic,career-focused
-Master of Engineering Management,graduate,hybrid,high,auditory,career-focused
-Master of Engineering Management,graduate,hybrid,high,auditory,career-focused
-PhD in Civil Engineering,graduate,full_time,high,kinesthetic,career-focused
-PhD in Civil Engineering,graduate,full_time,high,kinesthetic,career-focused
-PhD in Mechanical Engineering,graduate,full_time,high,kinesthetic,career-focused
-PhD in Mechanical Engineering,graduate,full_time,high,kinesthetic,career-focused
-PhD in Electrical Engineering,graduate,full_time,high,kinesthetic,career-focused
-PhD in Electrical Engineering,graduate,full_time,high,kinesthetic,career-focused
-MBA in Technology Management,graduate,hybrid,high,auditory,career-focused
-MBA in Technology Management,graduate,hybrid,high,auditory,career-focused
-Doctor of Business Administration - DBA,graduate,hybrid,high,auditory,career-focused
-Doctor of Business Administration - DBA,graduate,hybrid,high,auditory,career-focused
-Master of Hospital Administration,graduate,hybrid,high,auditory,career-focused
-Master of Hospital Administration,graduate,hybrid,high,auditory,career-focused
-Doctor of Medicine - MD,graduate,full_time,high,kinesthetic,career-focused
-Doctor of Medicine - MD,graduate,full_time,high,kinesthetic,career-focused
+program_name,program_type,modality,budget,learning_style,motivation,field
+STEM Track SHS,shs,full_time,low,kinesthetic,career-focused,technology
+STEM Track SHS,shs,full_time,low,kinesthetic,career-focused,technology
+Humanities Track SHS,shs,full_time,low,visual,career-focused,education
+Humanities Track SHS,shs,full_time,low,visual,career-focused,education
+ABM Track SHS,shs,full_time,low,auditory,career-focused,business
+ABM Track SHS,shs,full_time,low,auditory,career-focused,business
+Sports Science SHS,shs,full_time,medium,kinesthetic,interest-based,healthcare
+Sports Science SHS,shs,full_time,medium,kinesthetic,interest-based,healthcare
+Arts Track SHS,shs,full_time,medium,visual,interest-based,creative
+Arts Track SHS,shs,full_time,medium,visual,interest-based,creative
+TVL Track - Agriculture SHS,shs,full_time,low,kinesthetic,career-focused,agriculture
+TVL Track - Agriculture SHS,shs,full_time,low,kinesthetic,career-focused,agriculture
+TVL Track - Automotive SHS,shs,full_time,low,kinesthetic,career-focused,automotive
+TVL Track - Automotive SHS,shs,full_time,low,kinesthetic,career-focused,automotive
+TVL Track - Beauty Care SHS,shs,full_time,low,kinesthetic,career-focused,beauty
+TVL Track - Beauty Care SHS,shs,full_time,low,kinesthetic,career-focused,beauty
+TVL Track - Construction SHS,shs,full_time,low,kinesthetic,career-focused,construction
+TVL Track - Construction SHS,shs,full_time,low,kinesthetic,career-focused,construction
+TVL Track - Culinary SHS,shs,full_time,low,kinesthetic,career-focused,culinary
+TVL Track - Culinary SHS,shs,full_time,low,kinesthetic,career-focused,culinary
+STEM Track - Electronics SHS,shs,full_time,low,kinesthetic,career-focused,electronics
+STEM Track - Electronics SHS,shs,full_time,low,kinesthetic,career-focused,electronics
+STEM Track - Engineering SHS,shs,full_time,low,kinesthetic,career-focused,engineering
+STEM Track - Engineering SHS,shs,full_time,low,kinesthetic,career-focused,engineering
+TVL Track - Tourism SHS,shs,full_time,low,auditory,career-focused,tourism
+TVL Track - Tourism SHS,shs,full_time,low,auditory,career-focused,tourism
+Bachelor of Science in Computer Science,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Computer Science,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Information Technology,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Information Technology,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Computer Engineering,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Computer Engineering,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Data Science,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Data Science,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Cybersecurity,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Cybersecurity,college,full_time,high,kinesthetic,career-focused,technology
+Bachelor of Science in Business Administration,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Business Administration,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Accountancy,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Accountancy,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Management,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Management,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Finance,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Finance,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Economics,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Economics,college,full_time,high,auditory,career-focused,business
+Bachelor of Science in Nursing,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Nursing,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Pharmacy,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Pharmacy,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Medical Technology,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Medical Technology,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Health Sciences,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Health Sciences,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Physical Therapy,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Physical Therapy,college,full_time,high,kinesthetic,career-focused,healthcare
+Bachelor of Science in Civil Engineering,college,full_time,high,kinesthetic,career-focused,engineering
+Bachelor of Science in Civil Engineering,college,full_time,high,kinesthetic,career-focused,engineering
+Bachelor of Science in Mechanical Engineering,college,full_time,high,kinesthetic,career-focused,engineering
+Bachelor of Science in Mechanical Engineering,college,full_time,high,kinesthetic,career-focused,engineering
+Bachelor of Science in Electrical Engineering,college,full_time,high,kinesthetic,career-focused,engineering
+Bachelor of Science in Electrical Engineering,college,full_time,high,kinesthetic,career-focused,engineering
+Bachelor of Science in Electronics Engineering,college,full_time,high,kinesthetic,career-focused,electronics
+Bachelor of Science in Electronics Engineering,college,full_time,high,kinesthetic,career-focused,electronics
+Bachelor of Science in Chemical Engineering,college,full_time,high,kinesthetic,career-focused,engineering
+Bachelor of Science in Chemical Engineering,college,full_time,high,kinesthetic,career-focused,engineering
+Bachelor of Fine Arts,college,full_time,high,visual,interest-based,creative
+Bachelor of Fine Arts,college,full_time,high,visual,interest-based,creative
+Bachelor of Arts in Graphic Design,college,full_time,medium,visual,interest-based,creative
+Bachelor of Arts in Graphic Design,college,full_time,medium,visual,interest-based,creative
+Bachelor of Arts in Interior Design,college,full_time,medium,visual,interest-based,creative
+Bachelor of Arts in Interior Design,college,full_time,medium,visual,interest-based,creative
+Bachelor of Arts in Fashion Design,college,full_time,medium,visual,interest-based,creative
+Bachelor of Arts in Fashion Design,college,full_time,medium,visual,interest-based,creative
+Bachelor of Arts in Film and Video Production,college,full_time,high,visual,interest-based,creative
+Bachelor of Arts in Film and Video Production,college,full_time,high,visual,interest-based,creative
+Bachelor of Arts in Education,college,full_time,medium,auditory,career-focused,education
+Bachelor of Arts in Education,college,full_time,medium,auditory,career-focused,education
+Bachelor of Science in Education - STEM,college,full_time,medium,kinesthetic,career-focused,education
+Bachelor of Science in Education - STEM,college,full_time,medium,kinesthetic,career-focused,education
+Bachelor of Science in Education - Mathematics,college,full_time,medium,auditory,career-focused,education
+Bachelor of Science in Education - Mathematics,college,full_time,medium,auditory,career-focused,education
+Bachelor of Science in Education - English,college,full_time,medium,visual,career-focused,education
+Bachelor of Science in Education - English,college,full_time,medium,visual,career-focused,education
+Bachelor of Science in Education - Science,college,full_time,medium,kinesthetic,career-focused,education
+Bachelor of Science in Education - Science,college,full_time,medium,kinesthetic,career-focused,education
+Bachelor of Science in Culinary Arts,college,full_time,medium,kinesthetic,career-focused,culinary
+Bachelor of Science in Culinary Arts,college,full_time,medium,kinesthetic,career-focused,culinary
+Bachelor of Science in Food Technology,college,full_time,high,kinesthetic,career-focused,culinary
+Bachelor of Science in Food Technology,college,full_time,high,kinesthetic,career-focused,culinary
+Diploma in Culinary Arts,college,full_time,medium,kinesthetic,career-focused,culinary
+Diploma in Culinary Arts,college,full_time,medium,kinesthetic,career-focused,culinary
+Bachelor of Science in Architecture,college,full_time,high,visual,career-focused,construction
+Bachelor of Science in Architecture,college,full_time,high,visual,career-focused,construction
+Bachelor of Science in Civil Engineering - Construction,college,full_time,high,kinesthetic,career-focused,construction
+Bachelor of Science in Civil Engineering - Construction,college,full_time,high,kinesthetic,career-focused,construction
+Certificate in Construction Management,college,full_time,medium,kinesthetic,career-focused,construction
+Certificate in Construction Management,college,full_time,medium,kinesthetic,career-focused,construction
+Bachelor of Science in Agriculture,college,full_time,high,kinesthetic,career-focused,agriculture
+Bachelor of Science in Agriculture,college,full_time,high,kinesthetic,career-focused,agriculture
+Bachelor of Science in Agronomy,college,full_time,high,kinesthetic,career-focused,agriculture
+Bachelor of Science in Agronomy,college,full_time,high,kinesthetic,career-focused,agriculture
+Bachelor of Science in Agricultural Engineering,college,full_time,high,kinesthetic,career-focused,agriculture
+Bachelor of Science in Agricultural Engineering,college,full_time,high,kinesthetic,career-focused,agriculture
+Bachelor of Science in Horticulture,college,full_time,medium,kinesthetic,career-focused,agriculture
+Bachelor of Science in Horticulture,college,full_time,medium,kinesthetic,career-focused,agriculture
+Bachelor of Science in Hospitality Management,college,full_time,medium,auditory,career-focused,tourism
+Bachelor of Science in Hospitality Management,college,full_time,medium,auditory,career-focused,tourism
+Bachelor of Science in Tourism Management,college,full_time,medium,visual,career-focused,tourism
+Bachelor of Science in Tourism Management,college,full_time,medium,visual,career-focused,tourism
+Bachelor of Science in Hotel and Restaurant Management,college,full_time,medium,auditory,career-focused,tourism
+Bachelor of Science in Hotel and Restaurant Management,college,full_time,medium,auditory,career-focused,tourism
+Bachelor of Science in Tourism,college,full_time,medium,visual,interest-based,tourism
+Bachelor of Science in Tourism,college,full_time,medium,visual,interest-based,tourism
+Bachelor of Science in Beauty and Wellness,college,full_time,medium,kinesthetic,career-focused,beauty
+Bachelor of Science in Beauty and Wellness,college,full_time,medium,kinesthetic,career-focused,beauty
+Certificate in Cosmetology,college,full_time,medium,kinesthetic,career-focused,beauty
+Certificate in Cosmetology,college,full_time,medium,kinesthetic,career-focused,beauty
+Diploma in Spa and Wellness Management,college,full_time,medium,auditory,career-focused,beauty
+Diploma in Spa and Wellness Management,college,full_time,medium,auditory,career-focused,beauty
+Bachelor of Science in Automotive Engineering,college,full_time,high,kinesthetic,career-focused,automotive
+Bachelor of Science in Automotive Engineering,college,full_time,high,kinesthetic,career-focused,automotive
+Diploma in Automotive Technology,college,full_time,medium,kinesthetic,career-focused,automotive
+Diploma in Automotive Technology,college,full_time,medium,kinesthetic,career-focused,automotive
+Diploma in Electronics Technology,college,full_time,medium,kinesthetic,career-focused,electronics
+Diploma in Electronics Technology,college,full_time,medium,kinesthetic,career-focused,electronics
+ALS Accreditation and Equivalency (A&E),als,part_time,low,visual,career-focused,education
+ALS Accreditation and Equivalency (A&E),als,part_time,low,visual,career-focused,education
+ALS Professional Development,als,part_time,medium,auditory,career-focused,business
+ALS Professional Development,als,part_time,medium,auditory,career-focused,business
+ALS Entrepreneurship,als,part_time,low,kinesthetic,interest-based,business
+ALS Entrepreneurship,als,part_time,low,kinesthetic,interest-based,business
+ALS Tech Skills,als,part_time,medium,kinesthetic,career-focused,technology
+ALS Tech Skills,als,part_time,medium,kinesthetic,career-focused,technology
+ALS Business Skills,als,part_time,medium,auditory,career-focused,business
+ALS Business Skills,als,part_time,medium,auditory,career-focused,business
+ALS Healthcare Basics,als,part_time,medium,kinesthetic,career-focused,healthcare
+ALS Healthcare Basics,als,part_time,medium,kinesthetic,career-focused,healthcare
+ALS Agriculture Skills,als,part_time,medium,kinesthetic,career-focused,agriculture
+ALS Agriculture Skills,als,part_time,medium,kinesthetic,career-focused,agriculture
+ALS Automotive Basics,als,part_time,medium,kinesthetic,career-focused,automotive
+ALS Automotive Basics,als,part_time,medium,kinesthetic,career-focused,automotive
+ALS Beauty and Grooming,als,part_time,medium,kinesthetic,career-focused,beauty
+ALS Beauty and Grooming,als,part_time,medium,kinesthetic,career-focused,beauty
+ALS Construction Skills,als,part_time,medium,kinesthetic,career-focused,construction
+ALS Construction Skills,als,part_time,medium,kinesthetic,career-focused,construction
+ALS Arts and Design,als,part_time,medium,visual,interest-based,creative
+ALS Arts and Design,als,part_time,medium,visual,interest-based,creative
+ALS Culinary Skills,als,part_time,medium,kinesthetic,career-focused,culinary
+ALS Culinary Skills,als,part_time,medium,kinesthetic,career-focused,culinary
+ALS Electronics Basics,als,part_time,medium,kinesthetic,career-focused,electronics
+ALS Electronics Basics,als,part_time,medium,kinesthetic,career-focused,electronics
+ALS Engineering Basics,als,part_time,medium,kinesthetic,career-focused,engineering
+ALS Engineering Basics,als,part_time,medium,kinesthetic,career-focused,engineering
+ALS Tourism and Hospitality,als,part_time,medium,auditory,career-focused,tourism
+ALS Tourism and Hospitality,als,part_time,medium,auditory,career-focused,tourism
+Master of Business Administration (MBA),graduate,full_time,high,auditory,career-focused,business
+Master of Business Administration (MBA),graduate,online,medium,auditory,career-focused,business
+Master of Science in Computer Science,graduate,full_time,high,kinesthetic,career-focused,technology
+Master of Science in Computer Science,graduate,online,medium,kinesthetic,career-focused,technology
+Master of Science in Engineering,graduate,full_time,high,kinesthetic,career-focused,engineering
+Master of Science in Engineering,graduate,online,medium,kinesthetic,career-focused,engineering
+Master of Science in Information Technology,graduate,full_time,high,kinesthetic,career-focused,technology
+Master of Science in Information Technology,graduate,online,medium,kinesthetic,career-focused,technology
+Master of Arts in Education,graduate,full_time,high,auditory,career-focused,education
+Master of Arts in Education,graduate,online,medium,auditory,career-focused,education
+Master of Science in Data Science,graduate,full_time,high,kinesthetic,career-focused,technology
+Master of Science in Data Science,graduate,online,medium,kinesthetic,career-focused,technology
+Master of Science in Nursing,graduate,full_time,high,kinesthetic,career-focused,healthcare
+Master of Science in Nursing,graduate,online,medium,kinesthetic,career-focused,healthcare
+Master of Arts in Communication,graduate,full_time,high,auditory,interest-based,creative
+Master of Arts in Communication,graduate,online,medium,auditory,interest-based,creative
+Master of Science in Hospitality Management,graduate,full_time,high,auditory,career-focused,tourism
+Master of Science in Hospitality Management,graduate,online,medium,auditory,career-focused,tourism
+Master of Science in Tourism Management,graduate,full_time,high,auditory,career-focused,tourism
+Master of Science in Tourism Management,graduate,online,medium,auditory,career-focused,tourism
+Master of Business Administration - Hospitality,graduate,full_time,high,auditory,career-focused,tourism
+Master of Business Administration - Hospitality,graduate,online,medium,auditory,career-focused,tourism
+Master of Arts in Culinary Management,graduate,full_time,high,kinesthetic,career-focused,culinary
+Master of Arts in Culinary Management,graduate,online,medium,kinesthetic,career-focused,culinary
+Master of Science in Agriculture Management,graduate,full_time,high,kinesthetic,career-focused,agriculture
+Master of Science in Agriculture Management,graduate,online,medium,kinesthetic,career-focused,agriculture
+Master of Fine Arts,graduate,full_time,high,visual,interest-based,creative
+Master of Fine Arts,graduate,online,medium,visual,interest-based,creative
+Master of Architecture,graduate,full_time,high,visual,career-focused,construction
+Master of Architecture,graduate,online,medium,visual,career-focused,construction
+Master of Science in Automotive Engineering,graduate,full_time,high,kinesthetic,career-focused,automotive
+Master of Science in Automotive Engineering,graduate,online,medium,kinesthetic,career-focused,automotive
+Master of Science in Cosmetology Management,graduate,full_time,high,kinesthetic,career-focused,beauty
+Master of Science in Cosmetology Management,graduate,online,medium,kinesthetic,career-focused,beauty
+Master of Business Administration - Wellness,graduate,full_time,high,auditory,career-focused,beauty
+Master of Business Administration - Wellness,graduate,online,medium,auditory,career-focused,beauty
+Master of Science in Electronics Engineering,graduate,full_time,high,kinesthetic,career-focused,electronics
+Master of Science in Electronics Engineering,graduate,online,medium,kinesthetic,career-focused,electronics
+Doctor of Philosophy (PhD) - Technology,graduate,full_time,high,kinesthetic,interest-based,technology
+Doctor of Philosophy (PhD) - Technology,graduate,full_time,high,kinesthetic,interest-based,technology
+Doctor of Philosophy (PhD) - Business,graduate,full_time,high,auditory,interest-based,business
+Doctor of Philosophy (PhD) - Business,graduate,full_time,high,auditory,interest-based,business
+Doctor of Philosophy (PhD) - Engineering,graduate,full_time,high,kinesthetic,interest-based,engineering
+Doctor of Philosophy (PhD) - Engineering,graduate,full_time,high,kinesthetic,interest-based,engineering
+Doctor of Philosophy (PhD) - Healthcare,graduate,full_time,high,kinesthetic,interest-based,healthcare
+Doctor of Philosophy (PhD) - Healthcare,graduate,full_time,high,kinesthetic,interest-based,healthcare
+Doctor of Philosophy (PhD) - Beauty and Wellness,graduate,full_time,high,kinesthetic,interest-based,beauty
+Doctor of Philosophy (PhD) - Beauty and Wellness,graduate,full_time,high,kinesthetic,interest-based,beauty
+Doctor of Philosophy (PhD) - Electronics,graduate,full_time,high,kinesthetic,interest-based,electronics
+Doctor of Philosophy (PhD) - Electronics,graduate,full_time,high,kinesthetic,interest-based,electronics

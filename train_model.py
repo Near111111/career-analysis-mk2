@@ -43,8 +43,9 @@ train_pack("career_dataset.csv", "model_career.pkl",
            ["primary_skills","industry","salary","work_environment"], "job_title")
 
 # Education: target = program_name
+# IMPORTANT: field is now a FEATURE so model predictions are based on user's field selection
 train_pack("education_dataset.csv", "model_education.pkl",
-           ["modality","budget","learning_style","motivation"], "program_name")
+           ["modality","budget","learning_style","motivation","field"], "program_name")
 
 # TESDA
 train_pack("tesda_dataset.csv", "model_tesda.pkl",
