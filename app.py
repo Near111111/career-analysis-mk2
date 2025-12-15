@@ -429,24 +429,44 @@ def submit_pathway():
         else:
             recommendations = ml_model.predict_top_k(pathway, features, k=5)
 
-        # Filter education recommendations by program type
+        # Filter education recommendations by program type and education level
         if pathway == 'education':
             # Scoring constants for education recommendations (matching TESDA pathway for consistency)
             PRIMARY_KEYWORD_POINTS = 10
             SECONDARY_KEYWORD_POINTS = 3
-            MIN_BASE_SCORE = 60.0  # Minimum match percentage for keyword matches
+            MIN_BASE_SCORE = 80.0  # Increased from 60 to 80 for higher match percentages
             SCORE_DIVISOR = 10
             BONUS_MULTIPLIER = 20
             MAX_BONUS = 35  # Maximum bonus percentage from keywords
             MAX_MATCH_SCORE = 95.0  # Maximum possible match percentage
             
             program_type = responses.get('program_type', '').lower()
+            education_level = responses.get('education_level', '').lower()
             filtered_recommendations = []
             
-            # Define program categories
-            shs_programs = ['stem track', 'ict track', 'abm track', 'humss track', 'tvl - automotive', 'tvl - ict']
-            college_programs = ['bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch', 'bscriminology', 'bsagri', 'diploma - welding']
-            als_programs = ['als program']  # Add ALS-specific programs if available
+            # Define allowed program types based on education level
+            allowed_programs = {
+                'master': ['graduate'],
+                'bachelor': ['graduate', 'vocational', 'college'],
+                'associate': ['college', 'vocational', 'graduate'],
+                'vocational': ['college', 'vocational', 'als'],
+                'high_school': ['shs', 'college', 'vocational', 'als']
+            }
+            
+            # Check if program type is allowed for education level
+            if education_level in allowed_programs and program_type not in allowed_programs[education_level]:
+                return jsonify({
+                    'success': False,
+                    'message': f"For your education level, please select from: {', '.join(allowed_programs[education_level])}",
+                    'recommendations': []
+                })
+            
+            # Define program categories with improved matching
+            shs_programs = ['stem track', 'ict track', 'abm track', 'humss', 'humanities track', 'tvl', 'arts track', 'sports science']
+            college_programs = ['bachelor', 'bs', 'ba', 'bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch', 'engineering', 'nursing', 'accountancy', 'information technology']
+            als_programs = ['als', 'alternative learning', 'accreditation', 'equivalency']
+            graduate_programs = ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive', 'professional certification', 'professional master']
+            vocational_programs = ['tesda', 'nc ii', 'automotive servicing', 'welding', 'electrical installation', 'food and beverage', 'housekeeping']
             
             for rec in recommendations:
                 title = rec['title'].lower()
@@ -458,24 +478,40 @@ def submit_pathway():
                     filtered_recommendations.append(rec)
                 elif program_type == 'als' and any(prog in title for prog in als_programs):
                     filtered_recommendations.append(rec)
+                elif program_type == 'graduate' and any(prog in title for prog in graduate_programs):
+                    filtered_recommendations.append(rec)
+                elif program_type == 'vocational' and any(prog in title for prog in vocational_programs):
+                    filtered_recommendations.append(rec)
             
-            # If not enough filtered results, include what we have (limit to 5)
+            # If not enough filtered results, return empty with message
             if len(filtered_recommendations) == 0:
-                filtered_recommendations = recommendations[:5]
+                return jsonify({
+                    'success': False,
+                    'message': f'No {program_type} programs found. Please try different criteria.',
+                    'recommendations': []
+                })
             
             # Define education program keywords for boosting
             program_keywords = {
                 'shs': {
-                    'primary': ['stem', 'track', 'abm', 'humss', 'tvl', 'ict', 'automotive'],
+                    'primary': ['stem', 'track', 'abm', 'humss', 'humanities', 'tvl', 'ict', 'arts', 'sports'],
                     'secondary': ['senior', 'high', 'school', 'technical', 'vocational']
                 },
                 'college': {
-                    'primary': ['bs', 'bsit', 'bscs', 'bsba', 'bsn', 'bse', 'engineering', 'bachelor'],
-                    'secondary': ['college', 'degree', 'university', 'program', 'major']
+                    'primary': ['bs', 'ba', 'bsit', 'bscs', 'bsba', 'bsn', 'bse', 'engineering', 'bachelor'],
+                    'secondary': ['college', 'degree', 'university', 'program', 'major', 'science', 'arts']
                 },
                 'als': {
-                    'primary': ['als', 'alternative', 'learning'],
+                    'primary': ['als', 'alternative', 'learning', 'accreditation', 'equivalency'],
                     'secondary': ['education', 'system', 'program']
+                },
+                'graduate': {
+                    'primary': ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive'],
+                    'secondary': ['graduate', 'advanced', 'professional', 'certification', 'research', 'science', 'arts', 'business', 'administration']
+                },
+                'vocational': {
+                    'primary': ['tesda', 'nc ii', 'automotive', 'welding', 'electrical', 'servicing'],
+                    'secondary': ['vocational', 'technical', 'training', 'certification', 'installation', 'housekeeping']
                 }
             }
             
