@@ -431,6 +431,15 @@ def submit_pathway():
 
         # Filter education recommendations by program type
         if pathway == 'education':
+            # Scoring constants for education recommendations (matching TESDA pathway for consistency)
+            PRIMARY_KEYWORD_POINTS = 10
+            SECONDARY_KEYWORD_POINTS = 3
+            MIN_BASE_SCORE = 60.0  # Minimum match percentage for keyword matches
+            SCORE_DIVISOR = 10
+            BONUS_MULTIPLIER = 20
+            MAX_BONUS = 35  # Maximum bonus percentage from keywords
+            MAX_MATCH_SCORE = 95.0  # Maximum possible match percentage
+            
             program_type = responses.get('program_type', '').lower()
             filtered_recommendations = []
             
@@ -454,33 +463,108 @@ def submit_pathway():
             if len(filtered_recommendations) == 0:
                 filtered_recommendations = recommendations[:5]
             
-            recommendations = filtered_recommendations[:5]
+            # Define education program keywords for boosting
+            program_keywords = {
+                'shs': {
+                    'primary': ['stem', 'track', 'abm', 'humss', 'tvl', 'ict', 'automotive'],
+                    'secondary': ['senior', 'high', 'school', 'technical', 'vocational']
+                },
+                'college': {
+                    'primary': ['bs', 'bsit', 'bscs', 'bsba', 'bsn', 'bse', 'engineering', 'bachelor'],
+                    'secondary': ['college', 'degree', 'university', 'program', 'major']
+                },
+                'als': {
+                    'primary': ['als', 'alternative', 'learning'],
+                    'secondary': ['education', 'system', 'program']
+                }
+            }
+            
+            # Scoring function for education recommendations
+            def score_education_recommendation(title, keywords_dict):
+                title_lower = title.lower()
+                score = 0
+                
+                for keyword in keywords_dict.get('primary', []):
+                    if keyword in title_lower:
+                        score += PRIMARY_KEYWORD_POINTS
+                
+                for keyword in keywords_dict.get('secondary', []):
+                    if keyword in title_lower:
+                        score += SECONDARY_KEYWORD_POINTS
+                
+                return score
+            
+            # Apply boosting
+            if program_type in program_keywords:
+                keywords_dict = program_keywords[program_type]
+                scored_recs = []
+                
+                for rec in filtered_recommendations:
+                    score = score_education_recommendation(rec['title'], keywords_dict)
+                    
+                    if score > 0:
+                        boosted_match = max(rec['match'], MIN_BASE_SCORE)
+                        keyword_bonus = min((score / SCORE_DIVISOR) * BONUS_MULTIPLIER, MAX_BONUS)
+                        rec['match'] = min(boosted_match + keyword_bonus, MAX_MATCH_SCORE)
+                    
+                    scored_recs.append((rec, score))
+                
+                scored_recs.sort(key=lambda x: (-x[1], -x[0]['match']))
+                filtered_recommendations = [rec for rec, score in scored_recs if score > 0]
+                
+                if len(filtered_recommendations) > 0:
+                    recommendations = filtered_recommendations[:5]
+                else:
+                    recommendations = recommendations[:5]
+            else:
+                recommendations = filtered_recommendations[:5]
 
         # Filter career recommendations by industry
         if pathway == 'career':
+            # Scoring constants for career recommendations (matching TESDA pathway for consistency)
+            PRIMARY_KEYWORD_POINTS = 10
+            SECONDARY_KEYWORD_POINTS = 3
+            MIN_BASE_SCORE = 60.0  # Minimum match percentage for keyword matches
+            SCORE_DIVISOR = 10
+            BONUS_MULTIPLIER = 20
+            MAX_BONUS = 35  # Maximum bonus percentage from keywords
+            MAX_MATCH_SCORE = 95.0  # Maximum possible match percentage
+            
             industry = responses.get('industry', '').lower()
             
-            # Define career categories with better keyword matching
+            # Define career categories with comprehensive keyword matching
             industry_keywords = {
             'tech': {
-                'primary': ['developer', 'engineer', 'programmer', 'qa', 'software', 'analyst', 'devops', 'seo', 'data scientist'],
-                'secondary': ['technician', 'tech', 'it', 'support']
+                'primary': ['software', 'developer', 'programmer', 'data', 'analyst', 'it', 'technology', 'web', 'app'],
+                'secondary': ['computer', 'systems', 'technical', 'digital', 'engineer', 'specialist']
+            },
+            'healthcare': {
+                'primary': ['nurse', 'nursing', 'medical', 'health', 'care', 'therapy', 'therapist', 'clinical'],
+                'secondary': ['assistant', 'technician', 'caregiver', 'wellness', 'patient']
+            },
+            'health': {  # Alias for 'healthcare' to support both form inputs and dataset values
+                'primary': ['nurse', 'nursing', 'medical', 'health', 'care', 'therapy', 'therapist', 'clinical'],
+                'secondary': ['assistant', 'technician', 'caregiver', 'wellness', 'patient']
             },
             'business': {
-                'primary': ['manager', 'business', 'sales', 'marketing', 'accountant', 'administrator', 'executive', 'coordinator', 'officer'],
-                'secondary': ['associate', 'representative', 'analyst']
-            },
-            'health': {
-                'primary': ['nurse', 'doctor', 'pharmacy', 'dental', 'therapist', 'medical', 'health'],
-                'secondary': ['assistant', 'technician', 'care']
-            },
-            'education': {
-                'primary': ['teacher', 'educator', 'instructor', 'professor', 'librarian', 'tutor', 'counselor', 'principal'],
-                'secondary': ['guidance', 'school']
+                'primary': ['business', 'management', 'manager', 'accountant', 'finance', 'hr', 'human resources'],
+                'secondary': ['administrator', 'operations', 'executive', 'analyst', 'consultant']
             },
             'creative': {
-                'primary': ['designer', 'artist', 'graphic', 'writer', 'journalist', 'photographer', 'social media'],
-                'secondary': ['creative', 'ui', 'ux', 'web']
+                'primary': ['design', 'designer', 'graphic', 'content', 'writer', 'creative', 'ux', 'ui', 'artist'],
+                'secondary': ['media', 'visual', 'digital', 'marketing', 'brand']
+            },
+            'engineering': {
+                'primary': ['engineer', 'engineering', 'civil', 'mechanical', 'electrical', 'industrial'],
+                'secondary': ['technical', 'design', 'construction', 'manufacturing', 'automation']
+            },
+            'education': {
+                'primary': ['teacher', 'teaching', 'professor', 'educator', 'instructor', 'tutor', 'education'],
+                'secondary': ['training', 'academic', 'faculty', 'learning', 'curriculum']
+            },
+            'sales': {
+                'primary': ['sales', 'marketing', 'representative', 'account', 'customer', 'business development'],
+                'secondary': ['client', 'service', 'relationship', 'commercial', 'retail']
             },
             'service': {
                 'primary': ['waiter', 'chef', 'cook', 'bartender', 'receptionist', 'concierge'],
@@ -492,39 +576,49 @@ def submit_pathway():
             }
             }
             
-            # Scoring function for recommendations
-            def score_recommendation(title, keywords_dict):
+            # Scoring function for career recommendations
+            def score_career_recommendation(title, keywords_dict):
                 title_lower = title.lower()
                 score = 0
                 
                 # Primary keywords worth more points
                 for keyword in keywords_dict.get('primary', []):
                     if keyword in title_lower:
-                        score += 10
+                        score += PRIMARY_KEYWORD_POINTS
                         
                 # Secondary keywords worth fewer points
                 for keyword in keywords_dict.get('secondary', []):
                     if keyword in title_lower:
-                        score += 3
+                        score += SECONDARY_KEYWORD_POINTS
                         
-                    return score
+                return score
                 
             if industry in industry_keywords:
                 keywords_dict = industry_keywords[industry]
                 scored_recs = []
                 
-                # Score all recommendations
+                # Score all recommendations and boost match percentages
                 for rec in recommendations:
-                    score = score_recommendation(rec['title'], keywords_dict)
+                    score = score_career_recommendation(rec['title'], keywords_dict)
+                    
+                    # Boost match percentage if there's a keyword match
+                    if score > 0:
+                        # Start with original match or minimum base score (whichever is higher)
+                        boosted_match = max(rec['match'], MIN_BASE_SCORE)
+                        
+                        # Add bonus based on keyword score
+                        keyword_bonus = min((score / SCORE_DIVISOR) * BONUS_MULTIPLIER, MAX_BONUS)
+                        
+                        rec['match'] = min(boosted_match + keyword_bonus, MAX_MATCH_SCORE)
+                    
                     scored_recs.append((rec, score))
                 
                 # Sort by score (descending), then by original match percentage
                 scored_recs.sort(key=lambda x: (-x[1], -x[0]['match']))
                 
-                # Get top recommendations with scores > 0 (matched at least one keyword)
+                # Get top recommendations with scores > 0
                 filtered_recommendations = [rec for rec, score in scored_recs if score > 0]
                 
-                # If we have matches, use them. Otherwise show best predictions anyway
                 if len(filtered_recommendations) > 0:
                     recommendations = filtered_recommendations[:5]
                 else:
