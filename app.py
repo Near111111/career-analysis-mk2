@@ -447,10 +447,9 @@ def submit_pathway():
             # Define allowed program types based on education level
             allowed_programs = {
                 'master': ['graduate'],
-                'bachelor': ['graduate', 'vocational', 'college'],
-                'associate': ['college', 'vocational', 'graduate'],
-                'vocational': ['college', 'vocational', 'als'],
-                'high_school': ['shs', 'college', 'vocational', 'als']
+                'bachelor': ['graduate', 'college'],
+                'associate': ['college', 'graduate'],
+                'high_school': ['shs', 'college', 'als']
             }
             
             # Check if program type is allowed for education level
@@ -463,25 +462,28 @@ def submit_pathway():
             
             # Define program categories with improved matching
             shs_programs = ['stem track', 'ict track', 'abm track', 'humss', 'humanities track', 'tvl', 'arts track', 'sports science']
-            college_programs = ['bachelor', 'bs', 'ba', 'bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch', 'engineering', 'nursing', 'accountancy', 'information technology']
+            college_programs = ['bachelor', 'bs ', 'ba ', 'bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch']
             als_programs = ['als', 'alternative learning', 'accreditation', 'equivalency']
-            graduate_programs = ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive', 'professional certification', 'professional master', 'cpa review', 'pmp', 'cisa', 'lpt review']
-            vocational_programs = ['tesda', 'nc ii', 'nc iii', 'automotive servicing', 'welding', 'electrical installation', 'food and beverage', 'housekeeping', 'computer systems servicing', 'plumbing', 'carpentry', 'masonry', 'caregiving', 'massage therapy', 'cookery', 'bread and pastry', 'bartending', 'hairdressing', 'beauty care', 'nail care', 'agricultural', 'organic agriculture', 'consumer electronics', 'electronic products', 'bookkeeping', 'front office', 'events management', 'construction painting', 'tile setting', 'heavy equipment', 'animation', 'visual graphic design', 'contact center', 'tour guiding', 'travel services', 'electrical maintenance']
+            graduate_programs = ['master', 'mba', 'phd', 'doctorate', 'ms ', 'ma ', 'doctor', 'executive mba', 'professional certification', 'professional master', 'cpa review', 'pmp', 'cisa', 'lpt review', 'dba']
+            # Exclude keywords for graduate programs (to prevent bachelor's programs from being included)
+            bachelor_exclude_keywords = ['bachelor', 'bs ', 'ba ', 'bsit', 'bscs', 'bsba', 'bsedu', 'bsn', 'bshrm', 'bsarch', 'bse']
             
             for rec in recommendations:
                 title = rec['title'].lower()
                 
-                # Filter based on program type selection
+                # Filter based on program type selection with strict validation
                 if program_type == 'shs' and any(prog in title for prog in shs_programs):
                     filtered_recommendations.append(rec)
                 elif program_type == 'college' and any(prog in title for prog in college_programs):
                     filtered_recommendations.append(rec)
                 elif program_type == 'als' and any(prog in title for prog in als_programs):
                     filtered_recommendations.append(rec)
-                elif program_type == 'graduate' and any(prog in title for prog in graduate_programs):
-                    filtered_recommendations.append(rec)
-                elif program_type == 'vocational' and any(prog in title for prog in vocational_programs):
-                    filtered_recommendations.append(rec)
+                elif program_type == 'graduate':
+                    # For graduate programs, MUST contain graduate keywords
+                    if any(kw in title for kw in graduate_programs):
+                        # Also EXCLUDE bachelor's keywords
+                        if not any(kw in title for kw in bachelor_exclude_keywords):
+                            filtered_recommendations.append(rec)
             
             # If not enough filtered results, return empty with message
             if len(filtered_recommendations) == 0:
@@ -529,10 +531,10 @@ def submit_pathway():
             program_keywords = {
                 'shs': {
                     'primary': ['stem', 'track', 'abm', 'humss', 'humanities', 'tvl', 'ict', 'arts', 'sports'],
-                    'secondary': ['senior', 'high', 'school', 'technical', 'vocational']
+                    'secondary': ['senior', 'high', 'school', 'technical']
                 },
                 'college': {
-                    'primary': ['bs', 'ba', 'bsit', 'bscs', 'bsba', 'bsn', 'bse', 'engineering', 'bachelor'],
+                    'primary': ['bs', 'ba', 'bsit', 'bscs', 'bsba', 'bsn', 'bse', 'bachelor'],
                     'secondary': ['college', 'degree', 'university', 'program', 'major', 'science', 'arts']
                 },
                 'als': {
@@ -540,12 +542,8 @@ def submit_pathway():
                     'secondary': ['education', 'system', 'program']
                 },
                 'graduate': {
-                    'primary': ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive', 'mat', 'cpa', 'pmp', 'cisa', 'lpt'],
-                    'secondary': ['graduate', 'advanced', 'professional', 'certification', 'research', 'science', 'arts', 'business', 'administration', 'review', 'licensed']
-                },
-                'vocational': {
-                    'primary': ['tesda', 'nc ii', 'nc iii', 'automotive', 'welding', 'electrical', 'servicing', 'cookery', 'bread', 'pastry', 'caregiving', 'massage', 'hairdressing', 'beauty', 'nail care'],
-                    'secondary': ['vocational', 'technical', 'training', 'certification', 'installation', 'housekeeping', 'plumbing', 'carpentry', 'masonry', 'bartending', 'agricultural', 'electronics', 'bookkeeping', 'front office', 'events', 'construction', 'tile', 'heavy equipment', 'animation', 'graphic design', 'contact center', 'tour guiding', 'travel']
+                    'primary': ['master', 'mba', 'phd', 'doctorate', 'ms', 'ma', 'doctor', 'executive mba', 'mat', 'cpa review', 'pmp', 'cisa', 'lpt review', 'dba', 'edd', 'med'],
+                    'secondary': ['graduate', 'advanced', 'professional', 'certification', 'research', 'administration', 'review', 'licensed', 'engineering management', 'hospital administration', 'public administration', 'cybersecurity', 'data science']
                 }
             }
             
