@@ -577,6 +577,14 @@ def submit_pathway():
             }
             }
             
+            # Scoring constants for TESDA recommendations
+            PRIMARY_KEYWORD_POINTS = 10  # Points awarded per primary keyword match
+            SECONDARY_KEYWORD_POINTS = 3  # Points awarded per secondary keyword match
+            MIN_BASE_SCORE = 60.0  # Minimum match percentage for keyword matches
+            BONUS_MULTIPLIER = 20  # Percentage bonus per 10 keyword points
+            MAX_BONUS = 35  # Maximum bonus percentage from keywords
+            MAX_MATCH_SCORE = 95.0  # Maximum possible match percentage
+            
             # Scoring function for TESDA recommendations
             def score_tesda_recommendation(title, keywords_dict):
                 title_lower = title.lower()
@@ -585,12 +593,12 @@ def submit_pathway():
                 # Primary keywords worth more points
                 for keyword in keywords_dict.get('primary', []):
                     if keyword in title_lower:
-                        score += 10
+                        score += PRIMARY_KEYWORD_POINTS
 
                 # Secondary keywords worth fewer points
                 for keyword in keywords_dict.get('secondary', []):
                     if keyword in title_lower:
-                        score += 3
+                        score += SECONDARY_KEYWORD_POINTS
 
                 return score
             if course_interest in course_keywords:
@@ -603,15 +611,14 @@ def submit_pathway():
                     
                     # If there's a keyword match, boost the original match percentage
                     if score > 0:
-                        # Start with original match or 60% base (whichever is higher)
-                        boosted_match = max(rec['match'], 60.0)
+                        # Start with original match or minimum base score (whichever is higher)
+                        boosted_match = max(rec['match'], MIN_BASE_SCORE)
                         
                         # Add bonus based on keyword score
-                        # Primary keywords (10 pts each) = +20% per keyword
-                        # Secondary keywords (3 pts each) = +10% per 3 pts
-                        keyword_bonus = min((score / 10) * 20, 35)  # Cap bonus at +35%
+                        # Each PRIMARY_KEYWORD_POINTS adds BONUS_MULTIPLIER% to match
+                        keyword_bonus = min((score / PRIMARY_KEYWORD_POINTS) * BONUS_MULTIPLIER, MAX_BONUS)
                         
-                        rec['match'] = min(boosted_match + keyword_bonus, 95.0)
+                        rec['match'] = min(boosted_match + keyword_bonus, MAX_MATCH_SCORE)
                     
                     scored_recs.append((rec, score))
                 
