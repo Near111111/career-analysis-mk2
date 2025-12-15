@@ -444,31 +444,10 @@ def submit_pathway():
             education_level = responses.get('education_level', '').lower()
             filtered_recommendations = []
             
-            # Education level validation - check for inappropriate combinations
-            inappropriate_combo = False
-            warning_message = ""
-            
-            if education_level == 'master' and program_type in ['shs', 'college']:
-                inappropriate_combo = True
-                warning_message = "Master's degree holders should select Graduate programs"
-            elif education_level == 'bachelor' and program_type == 'shs':
-                inappropriate_combo = True
-                warning_message = "Bachelor's degree holders should select Graduate, Vocational, or College programs"
-            elif education_level == 'high_school' and program_type == 'graduate':
-                inappropriate_combo = True
-                warning_message = "High school students should complete undergraduate education before pursuing graduate programs"
-            
-            if inappropriate_combo:
-                return jsonify({
-                    'success': False,
-                    'message': warning_message,
-                    'recommendations': []
-                })
-            
             # Define allowed program types based on education level
             allowed_programs = {
                 'master': ['graduate'],
-                'bachelor': ['graduate', 'vocational'],
+                'bachelor': ['graduate', 'vocational', 'college'],
                 'associate': ['college', 'vocational', 'graduate'],
                 'vocational': ['college', 'vocational', 'als'],
                 'high_school': ['shs', 'college', 'vocational', 'als']
